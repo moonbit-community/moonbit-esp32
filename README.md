@@ -1,2 +1,1 @@
-# moonbit-esp32
-MoonBit ESP32 Binding
+# MoonBit ESP32 Binding
