@@ -13,6 +13,7 @@
 // // limitations under the License.
 
 ///|
+#borrow(pcName)
 extern "C" fn _xTaskCreate(
   pxTaskCode : FuncRef[(@ctypes.Ptr[@ctypes.Void]) -> Unit],
   pcName : @ctypes.CString,
