@@ -1,9 +1,9 @@
 {
     "import": [
-        "moonbitlang/esp32/components/spi"
+        "moonbitlang/esp32/components/lcd"
     ],
     "native-stub": [
-        "moonbit_esp32_lcd_stub.c"
+        "esp_qemu_stub.c"
     ],
     "supported-targets": [
         "native"

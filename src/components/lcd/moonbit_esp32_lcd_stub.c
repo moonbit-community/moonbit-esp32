@@ -18,7 +18,6 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_vendor.h"
-#include "esp_lcd_qemu_rgb.h"
 #include "esp_lcd_types.h"
 #include <esp_lcd_io_spi.h>
 
@@ -104,32 +103,4 @@ __wrap_esp_lcd_new_panel_st7789(esp_lcd_panel_io_handle_t *io_handle,
   esp_err_t ret =
       esp_lcd_new_panel_st7789(*io_handle, &panel_config, &panel_handle);
   return panel_handle;
-}
-
-//////////////
-
-// QEME RGB LCD
-
-struct moonbit_ref_optional_panel {
-  esp_lcd_panel_handle_t panel;
-};
-
-void *__wrap_esp_lcd_new_rgb_qemu(int32_t width, int32_t height,
-                                  esp_lcd_rgb_qemu_bpp_t bpp) {
-
-  esp_lcd_rgb_qemu_config_t rgb_config = {
-      .width = width,
-      .height = height,
-      .bpp = bpp,
-  };
-  esp_lcd_panel_handle_t panel;
-  esp_err_t ret = esp_lcd_new_rgb_qemu(&rgb_config, &panel);
-  return panel;
-}
-
-// TODO
-// esp_err_t __wrap_esp_lcd_rgb_qemu_get_frame_buffer(void *panel, void **fb);
-
-esp_err_t __wrap_esp_lcd_rgb_qemu_refresh(void *panel) {
-  return esp_lcd_rgb_qemu_refresh(panel);
 }

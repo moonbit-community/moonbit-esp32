@@ -16,15 +16,6 @@
 pub extern type Panel
 
 ///|
-pub(all) enum ESP_LCD_RGB_QEMU_BPP {
-  BPP_32 = 32
-  BPP_16 = 16
-}
-
-///|
-pub fn ESP_LCD_RGB_QEMU_BPP::to_uint(self : ESP_LCD_RGB_QEMU_BPP) -> UInt = "%identity"
-
-///|
 pub extern "C" fn esp_lcd_panel_reset(panel : Panel) -> Int = "__wrap_esp_lcd_panel_reset"
 
 ///|
@@ -83,11 +74,20 @@ extern "C" fn _esp_lcd_new_panel_st7789(
 ) -> Panel = "__wrap_esp_lcd_new_panel_st7789"
 
 ///|
+enum LCD_RGB_ELEMENT_ORDER {
+  RGB = 0
+  BGR = 1
+}
+
+///|
+fn LCD_RGB_ELEMENT_ORDER::to_uint(self : LCD_RGB_ELEMENT_ORDER) -> UInt = "%identity"
+
+///|
 pub fn esp_lcd_new_panel_st7789(
   io_handle~ : Ref[ESP_LCD_PANEL_IO_HANDLE?],
   reset_gpio_num~ : Int,
   rgb_ele_order~ : Int,
-  bits_per_pixel~ : ESP_LCD_RGB_QEMU_BPP
+  bits_per_pixel~ : LCD_RGB_ELEMENT_ORDER
 ) -> Panel {
   _esp_lcd_new_panel_st7789(
     io_handle,
@@ -96,18 +96,6 @@ pub fn esp_lcd_new_panel_st7789(
     bits_per_pixel.to_uint(),
   )
 }
-
-// qemu rgb lcd
-
-///|
-pub extern "C" fn esp_lcd_new_rgb_qemu(
-  width : Int,
-  height : Int,
-  bpp : ESP_LCD_RGB_QEMU_BPP
-) -> Panel = "__wrap_esp_lcd_new_rgb_qemu"
-
-///|
-pub extern "C" fn esp_lcd_rgb_qemu_refresh(panel : Panel) -> Int = "__wrap_esp_lcd_rgb_qemu_refresh"
 
 ///|
 pub(all) struct ESP_LCD_PANEL_IO_SPI_CONFIG {
