@@ -60,6 +60,7 @@ pub extern "C" fn esp_lcd_panel_disp_on_off(
 pub extern "C" fn esp_lcd_panel_disp_sleep(panel : Panel, sleep : Bool) -> Int = "__wrap_esp_lcd_panel_disp_sleep"
 
 ///|
+#borrow(io_handle)
 extern "C" fn _esp_lcd_new_panel_st7789(
   io_handle : Ref[ESP_LCD_PANEL_IO_HANDLE?],
   reset_gpio_num : Int,
@@ -109,6 +110,7 @@ pub(all) struct ESP_LCD_PANEL_IO_SPI_CONFIG {
 extern type ESP_LCD_PANEL_IO_HANDLE
 
 ///|
+#borrow(io_handle)
 extern "C" fn __wrap_esp_lcd_new_panel_io_spi(
   bus : Int,
   dc_gpio_num : Int,
