@@ -80,20 +80,20 @@ enum LCD_RGB_ELEMENT_ORDER {
 }
 
 ///|
-fn LCD_RGB_ELEMENT_ORDER::to_uint(self : LCD_RGB_ELEMENT_ORDER) -> UInt = "%identity"
+fn LCD_RGB_ELEMENT_ORDER::to_int(self : LCD_RGB_ELEMENT_ORDER) -> Int = "%identity"
 
 ///|
 pub fn esp_lcd_new_panel_st7789(
   io_handle~ : Ref[ESP_LCD_PANEL_IO_HANDLE?],
   reset_gpio_num~ : Int,
-  rgb_ele_order~ : Int,
-  bits_per_pixel~ : LCD_RGB_ELEMENT_ORDER
+  rgb_ele_order~ : LCD_RGB_ELEMENT_ORDER,
+  bits_per_pixel~ : UInt
 ) -> Panel {
   _esp_lcd_new_panel_st7789(
     io_handle,
     reset_gpio_num,
-    rgb_ele_order,
-    bits_per_pixel.to_uint(),
+    rgb_ele_order.to_int(),
+    bits_per_pixel,
   )
 }
 
