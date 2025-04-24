@@ -74,7 +74,7 @@ extern "C" fn _esp_lcd_new_panel_st7789(
 ) -> Panel = "__wrap_esp_lcd_new_panel_st7789"
 
 ///|
-enum LCD_RGB_ELEMENT_ORDER {
+pub(all) enum LCD_RGB_ELEMENT_ORDER {
   RGB = 0
   BGR = 1
 }
