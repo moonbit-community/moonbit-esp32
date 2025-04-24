@@ -1,10 +1,9 @@
 {
     "import": [
-        "moonbitlang/esp32/error",
-        "moonbitlang/esp32/components/spi"
+        "moonbitlang/esp32/error"
     ],
     "native-stub": [
-        "moonbit_esp32_lcd_stub.c"
+        "moonbit_esp32_spi_stub.c"
     ],
     "supported-targets": [
         "native"
