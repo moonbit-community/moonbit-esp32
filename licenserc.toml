@@ -30,4 +30,4 @@ inlineHeader = """
 // limitations under the License.
 """
 
-excludes = []
+excludes = ["src/components/lcd/esp_lcd_qemu_rgb.h"]
