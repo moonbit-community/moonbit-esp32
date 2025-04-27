@@ -195,7 +195,7 @@ USER_MAIN_CC_FLAGS = [
     "-D_GLIBCXX_USE_POSIX_SEMAPHORE",
     "-D_GNU_SOURCE",
     "-D_POSIX_READER_WRITER_LOCKS",
-    "-march=rv32imac_zicsr_zifencei",
+    "-march=rv32imc_zicsr_zifencei",
     "-fdiagnostics-color=always",
     "-ffunction-sections",
     "-fdata-sections",
