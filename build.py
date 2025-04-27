@@ -299,6 +299,11 @@ def create_moonbit_esp32_template_project(app_root_dir: pathlib.Path):
     """
 
     moonbit_esp32_dir = app_root_dir / ".moonbit_esp32"
+
+    if moonbit_esp32_dir.exists():
+        print(f"{moonbit_esp32_dir} already exists")
+        return
+
     if not moonbit_esp32_dir.exists():
         moonbit_esp32_dir.mkdir(parents=True)
 
@@ -378,6 +383,7 @@ def create_moonbit_esp32_template_project(app_root_dir: pathlib.Path):
         target_link_libraries(${COMPONENT_LIB} INTERFACE moonbit_app)
         """)
         )
+
     with open(
         app_root_dir / ".moonbit_esp32/components/moonbit_app/include/moonbit_app.h",
         "w",
@@ -441,31 +447,38 @@ def find_esp_idf():
         component_dir = module_root_dir / "src" / "components" / component
         with open(component_dir / "moon.pkg.json", "r") as fp:
             pkg_json = json.load(fp)
-            pkg_json["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
-            pkg_json["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
-            pkg_json["link"]["native"]["stub-cc-flags"] = cc_flags
+            if not pkg_json["link"]["native"]["cc"]:
+                pkg_json["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
+            if not pkg_json["link"]["native"]["stub-cc"]:
+                pkg_json["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
+            if not pkg_json["link"]["native"]["cc-flags"]:
+                pkg_json["link"]["native"]["stub-cc-flags"] = cc_flags
 
         with open(component_dir / "moon.pkg.json", "w") as fp:
             json.dump(pkg_json, fp, indent=2)
-    with open(app_root_dir / "Makefile", "w") as fp:
-        fp.write(
-            MAKEFILE_TEMPLATE.format(
-                ESP_IDF_GCC_PATH=riscv32_esp_elf_gcc_path,
-                ESP_IDF_AR_PATH=riscv32_esp_elf_gcc_path.replace(
-                    "riscv32-esp-elf-gcc", "riscv32-esp-elf-ar"
-                ),
-                CURRENT_MODULE_NAME=CURRENT_MODULE_NAME,
+    if not (app_root_dir / "Makefile").exists():
+        with open(app_root_dir / "Makefile", "w") as fp:
+            fp.write(
+                MAKEFILE_TEMPLATE.format(
+                    ESP_IDF_GCC_PATH=riscv32_esp_elf_gcc_path,
+                    ESP_IDF_AR_PATH=riscv32_esp_elf_gcc_path.replace(
+                        "riscv32-esp-elf-gcc", "riscv32-esp-elf-ar"
+                    ),
+                    CURRENT_MODULE_NAME=CURRENT_MODULE_NAME,
+                )
             )
-        )
 
     with open(app_root_dir / "src/main/moon.pkg.json", "r") as fp:
         j = json.load(fp)
 
     with open(app_root_dir / "src/main/moon.pkg.json", "w") as fp:
         j.setdefault("link", {}).setdefault("native", {})
-        j["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
-        j["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
-        j["link"]["native"]["cc-flags"] = " ".join(USER_MAIN_CC_FLAGS)
+        if not j["link"]["native"].get("cc"):
+            j["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
+        if not j["link"]["native"].get("stub-cc"):
+            j["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
+        if not j["link"]["native"].get("cc-flags"):
+            j["link"]["native"]["cc-flags"] = " ".join(USER_MAIN_CC_FLAGS)
         json.dump(j, fp, indent=2)
 
     create_moonbit_esp32_template_project(app_root_dir)
