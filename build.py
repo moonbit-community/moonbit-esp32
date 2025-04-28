@@ -270,10 +270,13 @@ flash:
 \t$(IDF) flash $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
 qemu:
-\t$(IDF) qemu --graphics monitor
+\t$(IDF) qemu --graphics monito
 
 monitor:
 \t@:
+
+update-deps:
+\t$(IDF) update-dependencies
 
 %:
 \t@:
