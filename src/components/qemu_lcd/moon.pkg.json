@@ -3,7 +3,7 @@
         "moonbitlang/esp32/components/lcd"
     ],
     "native-stub": [
-        "esp_qemu_stub.c"
+        "moonbit_esp32_qemu_lcd_stub.c"
     ],
     "supported-targets": [
         "native"

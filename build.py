@@ -254,10 +254,7 @@ build:
 \t{ESP_IDF_AR_PATH} \\
 \t    rcs \
 \t    ./.moonbit_esp32/components/moonbit_app/libmoonbit_app.a \\
-\t    ./target/native/release/build/.mooncakes/{CURRENT_MODULE_NAME}/components/gpio/moonbit_esp32_gpio_stub.o \\
-\t    ./target/native/release/build/.mooncakes/{CURRENT_MODULE_NAME}/components/task/moonbit_esp32_task_stub.o \\
-\t    ./target/native/release/build/.mooncakes/{CURRENT_MODULE_NAME}/components/lcd/moonbit_esp32_lcd_stub.o \\
-\t    ./target/native/release/build/.mooncakes/{CURRENT_MODULE_NAME}/components/spi/moonbit_esp32_spi_stub.o \\
+{ESP_STUBS}
 \t    ./target/native/release/build/runtime.o \\
 \t    ./target/native/release/build/main/main.exe
 \t{ESP_IDF_AR_PATH} \\
@@ -395,6 +392,19 @@ def create_moonbit_esp32_template_project(app_root_dir: pathlib.Path):
         )
 
 
+def get_imported_components(app_root_dir: pathlib.Path) -> list[str]:
+    used = set()
+    for pkg in app_root_dir.rglob("moon.pkg.json"):
+        if pkg.is_file():
+            with open(pkg, "r") as fp:
+                j = json.load(fp)
+                if "import" in j:
+                    for im in j["import"]:
+                        if im.startswith("moonbitlang/esp32/components"):
+                            used.add(im.replace("moonbitlang/esp32/components/", "", 1))
+    return list(used)
+
+
 def find_esp_idf():
     home_path = pathlib.Path.home()
     esp = home_path.joinpath(".espressif")
@@ -451,12 +461,18 @@ def find_esp_idf():
                 pkg_json["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
             if not pkg_json["link"]["native"]["stub-cc"]:
                 pkg_json["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
-            if not pkg_json["link"]["native"]["cc-flags"]:
+            if not pkg_json["link"]["native"]["stub-cc-flags"]:
                 pkg_json["link"]["native"]["stub-cc-flags"] = cc_flags
 
         with open(component_dir / "moon.pkg.json", "w") as fp:
             json.dump(pkg_json, fp, indent=2)
     if not (app_root_dir / "Makefile").exists():
+        used = get_imported_components(app_root_dir)
+        stubs = []
+        for component in used:
+            stubs.append(
+                f"\t    ./target/native/release/build/.mooncakes/{CURRENT_MODULE_NAME}/components/{component}/moonbit_esp32_{component}_stub.o \\"
+            )
         with open(app_root_dir / "Makefile", "w") as fp:
             fp.write(
                 MAKEFILE_TEMPLATE.format(
@@ -465,6 +481,7 @@ def find_esp_idf():
                         "riscv32-esp-elf-gcc", "riscv32-esp-elf-ar"
                     ),
                     CURRENT_MODULE_NAME=CURRENT_MODULE_NAME,
+                    ESP_STUBS="\n".join(stubs),
                 )
             )
 
