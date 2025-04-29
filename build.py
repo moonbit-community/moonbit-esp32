@@ -13,7 +13,6 @@
 # // limitations under the License.
 
 import platform
-import sys
 import pathlib
 import json
 import subprocess
@@ -270,7 +269,7 @@ flash:
 \t$(IDF) flash $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
 qemu:
-\t$(IDF) qemu --graphics monito
+\t$(IDF) qemu --graphics monitor
 
 monitor:
 \t@:
@@ -510,8 +509,7 @@ def find_esp_idf():
 
 def main():
     if platform.system() != "Darwin":
-        print("only support macOS")
-        sys.exit(1)
+        print("Only tested on macOS, other systems may have issues")
     find_esp_idf()
 
 
