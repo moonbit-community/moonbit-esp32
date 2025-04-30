@@ -50,10 +50,9 @@ pub fn draw_bitmap(
   x_end : Int,
   y_end : Int,
   data : FixedArray[Byte]
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
-    _esp_lcd_panel_draw_bitmap(self, x_start, y_start, x_end, y_end, data)
-  })
+) -> Unit {
+  _esp_lcd_panel_draw_bitmap(self, x_start, y_start, x_end, y_end, data)
+  |> ignore
 }
 
 ///|
