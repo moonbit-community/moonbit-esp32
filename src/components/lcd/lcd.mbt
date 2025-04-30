@@ -16,14 +16,24 @@
 pub extern type Panel
 
 ///|
-pub extern "C" fn esp_lcd_panel_reset(panel : Panel) -> Int = "__wrap_esp_lcd_panel_reset"
+extern "C" fn _esp_lcd_panel_reset(panel : Panel) -> Int = "__wrap_esp_lcd_panel_reset"
 
 ///|
-pub extern "C" fn esp_lcd_panel_init(panel : Panel) -> Int = "__wrap_esp_lcd_panel_init"
+pub fn reset(self : Panel) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_lcd_panel_reset(self) })
+}
+
+///|
+extern "C" fn _esp_lcd_panel_init(panel : Panel) -> Int = "__wrap_esp_lcd_panel_init"
+
+///|
+pub fn initialize(self : Panel) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_lcd_panel_init(self) })
+}
 
 ///|
 #borrow(data)
-pub extern "C" fn esp_lcd_panel_draw_bitmap(
+extern "C" fn _esp_lcd_panel_draw_bitmap(
   panel : Panel,
   x_start : Int,
   y_start : Int,
@@ -31,6 +41,20 @@ pub extern "C" fn esp_lcd_panel_draw_bitmap(
   y_end : Int,
   data : FixedArray[Byte]
 ) -> Int = "__wrap_esp_lcd_panel_draw_bitmap"
+
+///|
+pub fn draw_bitmap(
+  self : Panel,
+  x_start : Int,
+  y_start : Int,
+  x_end : Int,
+  y_end : Int,
+  data : FixedArray[Byte]
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _esp_lcd_panel_draw_bitmap(self, x_start, y_start, x_end, y_end, data)
+  })
+}
 
 ///|
 pub extern "C" fn esp_lcd_panel_mirror(
@@ -50,19 +74,36 @@ pub extern "C" fn esp_lcd_panel_set_gap(
 ) -> Int = "__wrap_esp_lcd_panel_set_gap"
 
 ///|
-pub extern "C" fn esp_lcd_panel_invert_color(
+extern "C" fn _esp_lcd_panel_invert_color(
   panel : Panel,
   invert_color_data : Bool
 ) -> Int = "__wrap_esp_lcd_panel_invert_color"
 
 ///|
-pub extern "C" fn esp_lcd_panel_disp_on_off(
-  panel : Panel,
-  on_off : Bool
-) -> Int = "__wrap_esp_lcd_panel_disp_on_off"
+pub fn invert_color(
+  self : Panel,
+  invert_color_data : Bool
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _esp_lcd_panel_invert_color(self, invert_color_data)
+  })
+}
 
 ///|
-pub extern "C" fn esp_lcd_panel_disp_sleep(panel : Panel, sleep : Bool) -> Int = "__wrap_esp_lcd_panel_disp_sleep"
+extern "C" fn _esp_lcd_panel_disp_on_off(panel : Panel, on_off : Bool) -> Int = "__wrap_esp_lcd_panel_disp_on_off"
+
+///|
+pub fn on_off(self : Panel, on_off : Bool) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_lcd_panel_disp_on_off(self, on_off) })
+}
+
+///|
+extern "C" fn _esp_lcd_panel_disp_sleep(panel : Panel, sleep : Bool) -> Int = "__wrap_esp_lcd_panel_disp_sleep"
+
+///|
+pub fn sleep(self : Panel, sleep : Bool) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_lcd_panel_disp_sleep(self, sleep) })
+}
 
 ///|
 #borrow(io_handle)
@@ -142,4 +183,16 @@ pub fn esp_lcd_new_panel_io_spi(
     spi_config.trans_queue_depth,
     io_handle,
   )
+}
+
+///|
+pub fn config(
+  self : Panel,
+  on_off~ : Bool,
+  sleep~ : Bool,
+  invert_color~ : Bool
+) -> Unit!@error.ESPError {
+  self.on_off!(on_off)
+  self.sleep!(sleep)
+  self.invert_color!(invert_color)
 }
