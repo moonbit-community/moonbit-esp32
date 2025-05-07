@@ -1,0 +1,16 @@
+{
+    "import": [],
+    "native-stub": [
+        "moonbit_esp32_timer_stub.c"
+    ],
+    "supported-targets": [
+        "native"
+    ],
+    "link": {
+        "native": {
+            "cc": null,
+            "stub-cc": null,
+            "stub-cc-flags": null
+        }
+    }
+}
