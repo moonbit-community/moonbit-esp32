@@ -19,7 +19,7 @@
 
 esp_timer_handle_t __wrap_esp_timer_create(void *callback) {
   esp_timer_handle_t handle;
-  esp_timer_create_args_t *args = {
+  esp_timer_create_args_t timer_args = {
       .callback = callback,
       .arg = NULL,
   };
