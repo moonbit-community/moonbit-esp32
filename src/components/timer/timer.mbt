@@ -14,3 +14,18 @@
 
 ///|
 pub extern "C" fn esp_timer_get_time() -> Int64 = "esp_timer_get_time"
+
+///|
+extern type ESPTimer
+
+///|
+pub extern "C" fn esp_timer_create(
+  callback : FuncRef[(@ctypes.Ptr[@ctypes.Void]) -> Unit],
+  arg : @ctypes.Ptr[@ctypes.Void]
+) -> ESPTimer = "__wrap_esp_timer_create"
+
+///|
+pub extern "C" fn esp_timer_start_once(
+  timer : ESPTimer,
+  timeout_us : Int64
+) -> Int = "__wrap_esp_timer_start_once"

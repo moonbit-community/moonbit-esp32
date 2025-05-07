@@ -1,7 +1,5 @@
 {
-    "import": [
-        "moonbitlang/esp32/error"
-    ],
+    "import": [],
     "native-stub": [
         "moonbit_esp32_spi_stub.c"
     ],

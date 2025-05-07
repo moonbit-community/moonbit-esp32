@@ -1,5 +1,7 @@
 {
-    "import": [],
+    "import": [
+        "moonbitlang/esp32/ctypes"
+    ],
     "native-stub": [
         "moonbit_esp32_timer_stub.c"
     ],
