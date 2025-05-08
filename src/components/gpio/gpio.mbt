@@ -91,6 +91,22 @@ pub(all) enum GPIOPullMode {
 pub fn GPIOPullMode::to_int(self : GPIOPullMode) -> Int = "%identity"
 
 ///|
+pub(all) enum GPIODriveCap {
+  GPIO_DRIVE_CAP_0 = 0
+  GPIO_DRIVE_CAP_1
+  GPIO_DRIVE_CAP_2
+  GPIO_DRIVE_CAP_DEFAULT
+  GPIO_DRIVE_CAP_3
+  GPIO_DRIVE_CAP_MAX
+}
+
+///|
+pub fn GPIODriveCap::to_int(self : GPIODriveCap) -> Int = "%identity"
+
+///|
+pub fn GPIODriveCap::from_int(value : Int) -> GPIODriveCap = "%identity"
+
+///|
 pub(all) struct GPIOConfig {
   pin_bit_mask : UInt64
   mode : GPIOMode
@@ -280,4 +296,47 @@ extern "C" fn _gpio_uninstall_isr_service() = "gpio_uninstall_isr_service"
 ///|
 pub fn gpio_uninstall_isr_service() -> Unit {
   _gpio_uninstall_isr_service()
+}
+
+// TODO
+// esp_err_t gpio_isr_handler_add(gpio_num_t gpio_num, gpio_isr_t isr_handler, void *args)
+
+///|
+extern "C" fn _gpio_isr_handler_remove(gpio_num : Int) -> Int = "gpio_isr_handler_remove"
+
+///|
+pub fn gpio_isr_handler_remove(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_isr_handler_remove(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_set_drive_capability(gpio_num : Int, strength : Int) -> Int = "gpio_set_drive_capability"
+
+///|
+pub fn gpio_set_drive_capability(
+  gpio_num : Int,
+  strength : GPIODriveCap
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_set_drive_capability(gpio_num, strength.to_int())
+  })
+}
+
+///|
+extern "C" fn _gpio_get_drive_capability(
+  gpio_num : Int,
+  strength : Ref[Int]
+) -> Int = "gpio_get_drive_capability"
+
+///|
+pub fn gpio_get_drive_capability(
+  gpio_num : Int,
+  strength : Ref[GPIODriveCap]
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    let tmp = @ref.new(0)
+    let ret = _gpio_get_drive_capability(gpio_num, tmp)
+    strength.val = GPIODriveCap::from_int(tmp.val)
+    ret
+  })
 }
