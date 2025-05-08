@@ -109,6 +109,15 @@ pub(all) enum LEDCClkCfg {
 pub fn LEDCClkCfg::to_int(self : LEDCClkCfg) -> Int = "%identity"
 
 ///|
+pub(all) enum LEDCFadeMode {
+  LEDC_FADE_NO_WAIT = 0
+  LEDC_FADE_WAIT_DONE
+}
+
+///|
+pub fn LEDCFadeMode::to_int(self : LEDCFadeMode) -> Int = "%identity"
+
+///|
 extern "C" fn _ledc_channel_config(
   gpio_num~ : Int,
   speed_mod~ : Int,
@@ -542,10 +551,10 @@ extern "C" fn _ledc_fade_start(
 pub fn ledc_fade_start(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
-  fade_mode : Int
+  fade_mode : LEDCFadeMode
 ) -> Unit!@error.ESPError {
   @error.esp_err_wrapper!(fn() {
-    _ledc_fade_start(speed_mode.to_int(), channel.to_int(), fade_mode)
+    _ledc_fade_start(speed_mode.to_int(), channel.to_int(), fade_mode.to_int())
   })
 }
 
@@ -602,7 +611,7 @@ pub fn ledc_set_fade_time_and_start(
   channel : LEDCChannel,
   target_duty : UInt,
   max_fade_time_ms : UInt,
-  fade_mode : Int
+  fade_mode : LEDCFadeMode
 ) -> Unit!@error.ESPError {
   @error.esp_err_wrapper!(fn() {
     _ledc_set_fade_time_and_start(
@@ -610,7 +619,7 @@ pub fn ledc_set_fade_time_and_start(
       channel.to_int(),
       target_duty,
       max_fade_time_ms,
-      fade_mode,
+      fade_mode.to_int(),
     )
   })
 }
@@ -632,7 +641,7 @@ pub fn ledc_set_fade_step_and_start(
   target_duty : UInt,
   scale : UInt,
   cycle_num : UInt,
-  fade_mode : Int
+  fade_mode : LEDCFadeMode
 ) -> Unit!@error.ESPError {
   @error.esp_err_wrapper!(fn() {
     _ledc_set_fade_step_and_start(
@@ -641,7 +650,7 @@ pub fn ledc_set_fade_step_and_start(
       target_duty,
       scale,
       cycle_num,
-      fade_mode,
+      fade_mode.to_int(),
     )
   })
 }
