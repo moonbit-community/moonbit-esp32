@@ -1,0 +1,18 @@
+{
+    "import": [
+        "moonbitlang/esp32/error"
+    ],
+    "native-stub": [
+        "moonbit_esp32_intr_stub.c"
+    ],
+    "supported-targets": [
+        "native"
+    ],
+    "link": {
+        "native": {
+            "cc": null,
+            "stub-cc": null,
+            "stub-cc-flags": null
+        }
+    }
+}

@@ -18,7 +18,7 @@ import json
 import subprocess
 import textwrap
 
-COMPONENTS = ["gpio", "task", "lcd", "spi", "qemu_lcd", "timer"]
+COMPONENTS = ["gpio", "task", "lcd", "spi", "qemu_lcd", "timer", "intr"]
 
 CURRENT_MODULE_NAME = "moonbitlang/esp32"
 
