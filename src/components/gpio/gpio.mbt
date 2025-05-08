@@ -117,6 +117,14 @@ pub fn gpio_config(
 }
 
 ///|
+extern "C" fn _gpio_reset_pin(gpio_num : Int) -> Int = "gpio_reset_pin"
+
+///|
+pub fn gpio_reset_pin(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_reset_pin(gpio_num) })
+}
+
+///|
 extern "C" fn _gpio_set_level(pin : Int, level : Int) -> Int = "__wrap_gpio_set_level"
 
 ///|
