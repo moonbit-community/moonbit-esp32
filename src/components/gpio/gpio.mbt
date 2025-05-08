@@ -247,8 +247,25 @@ pub fn gpio_wakeup_disable(gpio_num : Int) -> Unit!@error.ESPError {
   @error.esp_err_wrapper!(fn() { _gpio_wakeup_disable(gpio_num) })
 }
 
-// TODO
-// esp_err_t gpio_isr_register(void (*fn)(void*), void *arg, int intr_alloc_flags, gpio_isr_handle_t *handle)
+///|
+extern "C" fn _gpio_isr_register(
+  callback : FuncRef[(() -> Unit) -> Unit],
+  closure : () -> Unit,
+  intr_alloc_flags : Int,
+  handle : @intr.IntrHandle
+) -> Int = "gpio_isr_register"
+
+///|
+pub fn gpio_isr_register(
+  callback : FuncRef[(() -> Unit) -> Unit],
+  closure : () -> Unit,
+  intr_alloc_flags : Int,
+  handle : @intr.IntrHandle
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_isr_register(callback, closure, intr_alloc_flags, handle)
+  })
+}
 
 ///|
 extern "C" fn _gpio_pullup_en(gpio_num : Int) -> Int = "gpio_pullup_en"
@@ -298,8 +315,23 @@ pub fn gpio_uninstall_isr_service() -> Unit {
   _gpio_uninstall_isr_service()
 }
 
-// TODO
-// esp_err_t gpio_isr_handler_add(gpio_num_t gpio_num, gpio_isr_t isr_handler, void *args)
+///|
+extern "C" fn _gpio_isr_handler_add(
+  gpio_num : Int,
+  isr_handler : FuncRef[(() -> Unit) -> Unit],
+  args : () -> Unit
+) -> Int = "gpio_isr_handler_add"
+
+///|
+pub fn gpio_isr_handler_add(
+  gpio_num : Int,
+  isr_handler : FuncRef[(() -> Unit) -> Unit],
+  args : () -> Unit
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_isr_handler_add(gpio_num, isr_handler, args)
+  })
+}
 
 ///|
 extern "C" fn _gpio_isr_handler_remove(gpio_num : Int) -> Int = "gpio_isr_handler_remove"
