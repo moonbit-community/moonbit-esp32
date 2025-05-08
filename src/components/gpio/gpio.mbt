@@ -66,7 +66,7 @@ pub(all) enum GPIOPulldown {
 pub fn GPIOPulldown::to_int(self : GPIOPulldown) -> Int = "%identity"
 
 ///|
-pub(all) enum GPIOIntType {
+pub(all) enum GPIOIntrType {
   GPIO_INTR_DISABLE = 0
   GPIO_INTR_POSEDGE = 1
   GPIO_INTR_NEGEDGE = 2
@@ -77,7 +77,7 @@ pub(all) enum GPIOIntType {
 }
 
 ///|
-pub fn GPIOIntType::to_int(self : GPIOIntType) -> Int = "%identity"
+pub fn GPIOIntrType::to_int(self : GPIOIntrType) -> Int = "%identity"
 
 ///|
 pub(all) struct GPIOConfig {
@@ -85,7 +85,7 @@ pub(all) struct GPIOConfig {
   mode : GPIOMode
   pull_up_en : GPIOPullup
   pull_down_en : GPIOPulldown
-  intr_type : GPIOIntType
+  intr_type : GPIOIntrType
 }
 
 ///|
@@ -103,7 +103,7 @@ pub fn gpio_config(
   mode~ : GPIOMode,
   pull_up_en~ : GPIOPullup,
   pull_down_en~ : GPIOPulldown,
-  intr_type~ : GPIOIntType
+  intr_type~ : GPIOIntrType
 ) -> Unit!@error.ESPError {
   @error.esp_err_wrapper!(fn() {
     _gpio_config(
