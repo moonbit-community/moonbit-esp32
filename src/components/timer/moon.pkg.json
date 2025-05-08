@@ -1,6 +1,6 @@
 {
     "import": [
-        "moonbitlang/esp32/ctypes"
+        "moonbitlang/esp32/error"
     ],
     "native-stub": [
         "moonbit_esp32_timer_stub.c"

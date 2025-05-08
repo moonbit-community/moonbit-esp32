@@ -32,3 +32,14 @@ int __wrap_esp_timer_start_once(esp_timer_handle_t timer, int64_t timeout_us) {
   esp_err_t err = esp_timer_start_once(timer, timeout_us);
   return err;
 }
+
+int __wrap_esp_timer_get_period(esp_timer_handle_t timer, int64_t *timeout_us) {
+  esp_err_t err = esp_timer_get_period(timer, timeout_us);
+  return err;
+}
+
+int __wrap_esp_timer_get_expiry_time(esp_timer_handle_t timer,
+                                     int64_t *expiry) {
+  esp_err_t err = esp_timer_get_expiry_time(timer, expiry);
+  return err;
+}

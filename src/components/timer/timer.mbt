@@ -13,7 +13,28 @@
 // // limitations under the License.
 
 ///|
-pub extern "C" fn esp_timer_get_time() -> Int64 = "esp_timer_get_time"
+extern "C" fn _esp_timer_early_init() -> Int = "esp_timer_early_init"
+
+///|
+pub fn esp_timer_early_init() -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_early_init() })
+}
+
+///|
+extern "C" fn _esp_timer_init() -> Int = "esp_timer_init"
+
+///|
+pub fn esp_timer_init() -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_init() })
+}
+
+///|
+extern "C" fn _esp_timer_deinit() -> Int = "esp_timer_deinit"
+
+///|
+pub fn esp_timer_deinit() -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_deinit() })
+}
 
 ///|
 extern type ESPTimer
@@ -26,3 +47,80 @@ pub extern "C" fn esp_timer_start_once(
   timer : ESPTimer,
   timeout_us : Int64
 ) -> Int = "__wrap_esp_timer_start_once"
+
+///|
+pub extern "C" fn esp_timer_start_periodic(
+  timer : ESPTimer,
+  timeout_us : Int64
+) -> Int = "esp_timer_start_periodic"
+
+///|
+pub extern "C" fn esp_timer_restart(
+  timer : ESPTimer,
+  timeout_us : Int64
+) -> Int = "esp_timer_restart"
+
+///|
+extern "C" fn _esp_timer_stop(timer : ESPTimer) -> Int = "esp_timer_stop"
+
+///|
+pub fn esp_timer_stop(timer : ESPTimer) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_stop(timer) })
+}
+
+///|
+extern "C" fn _esp_timer_delete(timer : ESPTimer) -> Int = "esp_timer_delete"
+
+///|
+pub fn esp_timer_delete(timer : ESPTimer) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_delete(timer) })
+}
+
+///|
+pub extern "C" fn esp_timer_get_time() -> Int64 = "esp_timer_get_time"
+
+///|
+pub extern "C" fn esp_timer_get_next_alarm() -> Int64 = "esp_timer_get_next_alarm"
+
+///|
+pub extern "C" fn esp_timer_get_next_alarm_for_wake_up() -> Int64 = "esp_timer_get_next_alarm_for_wake_up"
+
+///|
+extern "C" fn _esp_timer_get_period(
+  timer : ESPTimer,
+  period : Ref[UInt64]
+) -> Int = "__wrap_esp_timer_get_period"
+
+///|
+pub fn esp_timer_get_period(
+  timer : ESPTimer,
+  period : Ref[UInt64]
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_get_period(timer, period) })
+}
+
+///|
+extern "C" fn _esp_timer_get_expiry_time(
+  timer : ESPTimer,
+  expiry : Ref[UInt64]
+) -> Int = "__wrap_esp_timer_get_expiry_time"
+
+///|
+pub fn esp_timer_get_expiry_time(
+  timer : ESPTimer,
+  expiry : Ref[UInt64]
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _esp_timer_get_expiry_time(timer, expiry) })
+}
+
+// TODO
+// esp_err_t esp_timer_dump(FILE *stream)
+
+///|
+pub extern "C" fn esp_timer_isr_dispatch_need_yield() = "esp_timer_isr_dispatch_need_yield"
+
+///|
+pub extern "C" fn esp_timer_is_active(timer : ESPTimer) -> Bool = "esp_timer_is_active"
+
+// TODO
+// esp_err_t esp_timer_new_etm_alarm_event(esp_etm_event_handle_t *out_event)
