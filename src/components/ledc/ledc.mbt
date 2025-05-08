@@ -352,3 +352,296 @@ pub fn ledc_set_fade(
     )
   })
 }
+
+///|
+extern "C" fn _ledc_isr_register(
+  callback : FuncRef[(() -> Unit) -> Unit],
+  closure : () -> Unit,
+  intr_alloc_flags : Int,
+  handle : @intr.IntrHandle
+) -> Int = "ledc_isr_register"
+
+///|
+pub fn ledc_isr_register(
+  callback : FuncRef[(() -> Unit) -> Unit],
+  closure : () -> Unit,
+  intr_alloc_flags : Int,
+  handle : @intr.IntrHandle
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_isr_register(callback, closure, intr_alloc_flags, handle)
+  })
+}
+
+///|
+extern "C" fn _ledc_timer_set(
+  speed_mode : Int,
+  timer_sel : Int,
+  clock_divider : UInt,
+  duty_resolution : UInt,
+  clk_src : Int
+) -> Int = "ledc_timer_set"
+
+///|
+pub fn ledc_timer_set(
+  speed_mode : LEDCMode,
+  timer_sel : LEDCTimer,
+  clock_divider : UInt,
+  duty_resolution : UInt,
+  clk_src : LEDCClkCfg
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_timer_set(
+      speed_mode.to_int(),
+      timer_sel.to_int(),
+      clock_divider,
+      duty_resolution,
+      clk_src.to_int(),
+    )
+  })
+}
+
+///|
+extern "C" fn _ledc_timer_rst(speed_mode : Int, timer_sel : Int) -> Int = "ledc_timer_rst"
+
+///|
+pub fn ledc_timer_rst(
+  speed_mode : LEDCMode,
+  timer_sel : LEDCTimer
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_timer_rst(speed_mode.to_int(), timer_sel.to_int())
+  })
+}
+
+///|
+extern "C" fn _ledc_timer_pause(speed_mode : Int, timer_sel : Int) -> Int = "ledc_timer_pause"
+
+///|
+pub fn ledc_timer_pause(
+  speed_mode : LEDCMode,
+  timer_sel : LEDCTimer
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_timer_pause(speed_mode.to_int(), timer_sel.to_int())
+  })
+}
+
+///|
+extern "C" fn _ledc_timer_resume(speed_mode : Int, timer_sel : Int) -> Int = "ledc_timer_resume"
+
+///|
+pub fn ledc_timer_resume(
+  speed_mode : LEDCMode,
+  timer_sel : LEDCTimer
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_timer_resume(speed_mode.to_int(), timer_sel.to_int())
+  })
+}
+
+///|
+extern "C" fn _ledc_bind_channel_timer(
+  speed_mode : Int,
+  channel : Int,
+  timer_sel : Int
+) -> Int = "ledc_bind_channel_timer"
+
+///|
+pub fn ledc_bind_channel_timer(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  timer_sel : LEDCTimer
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_bind_channel_timer(
+      speed_mode.to_int(),
+      channel.to_int(),
+      timer_sel.to_int(),
+    )
+  })
+}
+
+///|
+extern "C" fn _ledc_set_fade_with_step(
+  speed_mode : Int,
+  channel : Int,
+  target_duty : UInt,
+  scale : UInt,
+  cycle_num : UInt
+) -> Int = "ledc_set_fade_with_step"
+
+///|
+pub fn ledc_set_fade_with_step(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  target_duty : UInt,
+  scale : UInt,
+  cycle_num : UInt
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_set_fade_with_step(
+      speed_mode.to_int(),
+      channel.to_int(),
+      target_duty,
+      scale,
+      cycle_num,
+    )
+  })
+}
+
+///|
+extern "C" fn _ledc_set_fade_with_time(
+  speed_mode : Int,
+  channel : Int,
+  target_duty : UInt,
+  max_fade_time_ms : Int
+) -> Int = "ledc_set_fade_with_time"
+
+///|
+pub fn ledc_set_fade_with_time(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  target_duty : UInt,
+  max_fade_time_ms : Int
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_set_fade_with_time(
+      speed_mode.to_int(),
+      channel.to_int(),
+      target_duty,
+      max_fade_time_ms,
+    )
+  })
+}
+
+///|
+extern "C" fn _ledc_fade_func_install(intr_alloc_flags : Int) -> Int = "ledc_fade_func_install"
+
+///|
+pub fn ledc_fade_func_install(intr_alloc_flags : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _ledc_fade_func_install(intr_alloc_flags) })
+}
+
+///|
+extern "C" fn _ledc_fade_func_uninstall() = "ledc_fade_func_uninstall"
+
+///|
+pub fn ledc_fade_func_uninstall() -> Unit {
+  _ledc_fade_func_uninstall()
+}
+
+///|
+extern "C" fn _ledc_fade_start(
+  speed_mode : Int,
+  channel : Int,
+  fade_mode : Int
+) -> Int = "ledc_fade_start"
+
+///|
+pub fn ledc_fade_start(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  fade_mode : Int
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_fade_start(speed_mode.to_int(), channel.to_int(), fade_mode)
+  })
+}
+
+///|
+extern "C" fn _ledc_fade_stop(speed_mode : Int, channel : Int) -> Int = "ledc_fade_stop"
+
+///|
+pub fn ledc_fade_stop(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_fade_stop(speed_mode.to_int(), channel.to_int())
+  })
+}
+
+///|
+extern "C" fn _ledc_set_duty_and_update(
+  speed_mode : Int,
+  channel : Int,
+  duty : UInt,
+  hpoint : UInt
+) -> Int = "ledc_set_duty_and_update"
+
+///|
+pub fn ledc_set_duty_and_update(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  duty : UInt,
+  hpoint : UInt
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_set_duty_and_update(
+      speed_mode.to_int(),
+      channel.to_int(),
+      duty,
+      hpoint,
+    )
+  })
+}
+
+///|
+extern "C" fn _ledc_set_fade_time_and_start(
+  speed_mode : Int,
+  channel : Int,
+  target_duty : UInt,
+  max_fade_time_ms : UInt,
+  fade_mode : Int
+) -> Int = "ledc_set_fade_time_and_start"
+
+///|
+pub fn ledc_set_fade_time_and_start(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  target_duty : UInt,
+  max_fade_time_ms : UInt,
+  fade_mode : Int
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_set_fade_time_and_start(
+      speed_mode.to_int(),
+      channel.to_int(),
+      target_duty,
+      max_fade_time_ms,
+      fade_mode,
+    )
+  })
+}
+
+///|
+extern "C" fn _ledc_set_fade_step_and_start(
+  speed_mode : Int,
+  channel : Int,
+  target_duty : UInt,
+  scale : UInt,
+  cycle_num : UInt,
+  fade_mode : Int
+) -> Int = "ledc_set_fade_step_and_start"
+
+///|
+pub fn ledc_set_fade_step_and_start(
+  speed_mode : LEDCMode,
+  channel : LEDCChannel,
+  target_duty : UInt,
+  scale : UInt,
+  cycle_num : UInt,
+  fade_mode : Int
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _ledc_set_fade_step_and_start(
+      speed_mode.to_int(),
+      channel.to_int(),
+      target_duty,
+      scale,
+      cycle_num,
+      fade_mode,
+    )
+  })
+}

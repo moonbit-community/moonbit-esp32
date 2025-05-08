@@ -1,6 +1,7 @@
 {
     "import": [
-        "moonbitlang/esp32/error"
+        "moonbitlang/esp32/error",
+        "moonbitlang/esp32/components/intr"
     ],
     "native-stub": [
         "moonbit_esp32_ledc_stub.c"
