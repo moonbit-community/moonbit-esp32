@@ -59,7 +59,7 @@ pub fn GPIOPullup::to_int(self : GPIOPullup) -> Int = "%identity"
 ///|
 pub(all) enum GPIOPulldown {
   GPIO_PULLDOWN_DISABLE = 0
-  GPIO_PULLDOWN_ENABLE = 1
+  GPIO_PULLDOWN_ENABLE
 }
 
 ///|
@@ -68,16 +68,27 @@ pub fn GPIOPulldown::to_int(self : GPIOPulldown) -> Int = "%identity"
 ///|
 pub(all) enum GPIOIntrType {
   GPIO_INTR_DISABLE = 0
-  GPIO_INTR_POSEDGE = 1
-  GPIO_INTR_NEGEDGE = 2
-  GPIO_INTR_ANYEDGE = 3
-  GPIO_INTR_LOW_LEVEL = 4
-  GPIO_INTR_HIGH_LEVEL = 5
-  GPIO_INTR_MAX = 6
+  GPIO_INTR_POSEDGE
+  GPIO_INTR_NEGEDGE
+  GPIO_INTR_ANYEDGE
+  GPIO_INTR_LOW_LEVEL
+  GPIO_INTR_HIGH_LEVEL
+  GPIO_INTR_MAX
 }
 
 ///|
 pub fn GPIOIntrType::to_int(self : GPIOIntrType) -> Int = "%identity"
+
+///|
+pub(all) enum GPIOPullMode {
+  GPIO_PULLUP_ONLY = 0
+  GPIO_PULLDOWN_ONLY
+  GPIO_PULLUP_PULLDOWN
+  GPIO_FLOATING
+}
+
+///|
+pub fn GPIOPullMode::to_int(self : GPIOPullMode) -> Int = "%identity"
 
 ///|
 pub(all) struct GPIOConfig {
@@ -125,9 +136,148 @@ pub fn gpio_reset_pin(gpio_num : Int) -> Unit!@error.ESPError {
 }
 
 ///|
+extern "C" fn _gpio_set_intr_type(gpio_num : Int, intr_type : Int) -> Int = "gpio_set_intr_type"
+
+///|
+pub fn gpio_set_intr_type(
+  gpio_num : Int,
+  intr_type : GPIOIntrType
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_set_intr_type(gpio_num, intr_type.to_int())
+  })
+}
+
+///|
+extern "C" fn _gpio_intr_enable(gpio_num : Int) -> Int = "gpio_intr_enable"
+
+///|
+pub fn gpio_intr_enable(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_intr_enable(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_intr_disable(gpio_num : Int) -> Int = "gpio_intr_disable"
+
+///|
+pub fn gpio_intr_disable(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_intr_disable(gpio_num) })
+}
+
+///|
 extern "C" fn _gpio_set_level(pin : Int, level : Int) -> Int = "__wrap_gpio_set_level"
 
 ///|
 pub fn gpio_set_level(pin : Int, level : Int) -> Unit!@error.ESPError {
   @error.esp_err_wrapper!(fn() { _gpio_set_level(pin, level) })
+}
+
+///|
+extern "C" fn _gpio_get_level(gpio_num : Int) -> Int = "gpio_get_level"
+
+///|
+pub fn gpio_get_level(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_get_level(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_set_direction(gpio_num : Int, mode : Int) -> Int = "gpio_set_direction"
+
+///|
+pub fn gpio_set_direction(
+  gpio_num : Int,
+  mode : GPIOMode
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_set_direction(gpio_num, mode.to_int()) })
+}
+
+///|
+extern "C" fn _gpio_input_enable(gpio_num : Int) -> Int = "gpio_input_enable"
+
+///|
+pub fn gpio_input_enable(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_input_enable(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_set_pull_mode(gpio_num : Int, pull : Int) -> Int = "gpio_set_pull_mode"
+
+///|
+pub fn gpio_set_pull_mode(
+  gpio_num : Int,
+  pull : GPIOPullMode
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_set_pull_mode(gpio_num, pull.to_int()) })
+}
+
+///|
+extern "C" fn _gpio_wakeup_enable(gpio_num : Int, intr_type : Int) -> Int = "gpio_wakeup_enable"
+
+///|
+pub fn gpio_wakeup_enable(
+  gpio_num : Int,
+  intr_type : GPIOIntrType
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_wakeup_enable(gpio_num, intr_type.to_int())
+  })
+}
+
+///|
+extern "C" fn _gpio_wakeup_disable(gpio_num : Int) -> Int = "gpio_wakeup_disable"
+
+///|
+pub fn gpio_wakeup_disable(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_wakeup_disable(gpio_num) })
+}
+
+// TODO
+// esp_err_t gpio_isr_register(void (*fn)(void*), void *arg, int intr_alloc_flags, gpio_isr_handle_t *handle)
+
+///|
+extern "C" fn _gpio_pullup_en(gpio_num : Int) -> Int = "gpio_pullup_en"
+
+///|
+pub fn gpio_pullup_en(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_pullup_en(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_pullup_dis(gpio_num : Int) -> Int = "gpio_pullup_dis"
+
+///|
+pub fn gpio_pullup_dis(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_pullup_dis(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_pulldown_en(gpio_num : Int) -> Int = "gpio_pulldown_en"
+
+///|
+pub fn gpio_pulldown_en(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_pulldown_en(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_pulldown_dis(gpio_num : Int) -> Int = "gpio_pulldown_dis"
+
+///|
+pub fn gpio_pulldown_dis(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_pulldown_dis(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_install_isr_service(intr_alloc_flags : Int) -> Int = "gpio_install_isr_service"
+
+///|
+pub fn gpio_install_isr_service(intr_alloc_flags : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_install_isr_service(intr_alloc_flags) })
+}
+
+///|
+extern "C" fn _gpio_uninstall_isr_service() = "gpio_uninstall_isr_service"
+
+///|
+pub fn gpio_uninstall_isr_service() -> Unit {
+  _gpio_uninstall_isr_service()
 }
