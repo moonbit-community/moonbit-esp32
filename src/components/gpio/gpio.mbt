@@ -340,3 +340,96 @@ pub fn gpio_get_drive_capability(
     ret
   })
 }
+
+///|
+extern "C" fn _gpio_hold_en(gpio_num : Int) -> Int = "gpio_hold_en"
+
+///|
+pub fn gpio_hold_en(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_hold_en(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_hold_dis(gpio_num : Int) -> Int = "gpio_hold_dis"
+
+///|
+pub fn gpio_hold_dis(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_hold_dis(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_deep_sleep_hold_en() = "gpio_deep_sleep_hold_en"
+
+///|
+pub fn gpio_deep_sleep_hold_en() -> Unit {
+  _gpio_deep_sleep_hold_en()
+}
+
+///|
+extern "C" fn _gpio_deep_sleep_hold_dis() = "gpio_deep_sleep_hold_dis"
+
+///|
+pub fn gpio_deep_sleep_hold_dis() -> Unit {
+  _gpio_deep_sleep_hold_dis()
+}
+
+///|
+extern "C" fn _gpio_iomux_in(gpio_num : UInt, signal_idx : UInt) = "gpio_iomux_in"
+
+///|
+pub fn gpio_iomux_in(gpio_num : UInt, signal_idx : UInt) -> Unit {
+  _gpio_iomux_in(gpio_num, signal_idx)
+}
+
+///|
+extern "C" fn _gpio_iomux_out(gpio_num : Byte, func : Int, out_en_inv : Bool) = "gpio_iomux_out"
+
+///|
+pub fn gpio_iomux_out(gpio_num : Byte, func : Int, out_en_inv : Bool) -> Unit {
+  _gpio_iomux_out(gpio_num, func, out_en_inv)
+}
+
+///|
+extern "C" fn _gpio_sleep_sel_en(gpio_num : Int) -> Int = "gpio_sleep_sel_en"
+
+///|
+pub fn gpio_sleep_sel_en(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_sleep_sel_en(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_sleep_sel_dis(gpio_num : Int) -> Int = "gpio_sleep_sel_dis"
+
+///|
+pub fn gpio_sleep_sel_dis(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_sleep_sel_dis(gpio_num) })
+}
+
+///|
+extern "C" fn _gpio_sleep_set_direction(gpio_num : Int, mode : Int) -> Int = "gpio_sleep_set_direction"
+
+///|
+pub fn gpio_sleep_set_direction(
+  gpio_num : Int,
+  mode : GPIOMode
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_sleep_set_direction(gpio_num, mode.to_int())
+  })
+}
+
+///|
+extern "C" fn _gpio_sleep_set_pull_mode(gpio_num : Int, pull : Int) -> Int = "gpio_sleep_set_pull_mode"
+
+///|
+pub fn gpio_sleep_set_pull_mode(
+  gpio_num : Int,
+  pull : GPIOPullMode
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_sleep_set_pull_mode(gpio_num, pull.to_int())
+  })
+}
+
+// TODO
+//esp_err_t gpio_dump_io_configuration(FILE *out_stream, uint64_t io_bit_mask)
