@@ -654,3 +654,6 @@ pub fn ledc_set_fade_step_and_start(
     )
   })
 }
+
+// TODO
+// esp_err_t ledc_cb_register(ledc_mode_t speed_mode, ledc_channel_t channel, ledc_cbs_t *cbs, void *user_arg)
