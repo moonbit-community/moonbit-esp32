@@ -40,7 +40,15 @@ pub fn esp_timer_deinit() -> Unit!@error.ESPError {
 extern type ESPTimer
 
 ///|
-pub extern "C" fn esp_timer_create(callback : FuncRef[() -> Unit]) -> ESPTimer = "__wrap_esp_timer_create"
+extern "C" fn _esp_timer_create(
+  callback : FuncRef[(() -> Unit) -> Unit],
+  closure : () -> Unit
+) -> ESPTimer = "__wrap_esp_timer_create"
+
+///|
+pub fn esp_timer_create(callback : () -> Unit) -> ESPTimer {
+  _esp_timer_create(fn(f) { f() }, callback)
+}
 
 ///|
 pub extern "C" fn esp_timer_start_once(

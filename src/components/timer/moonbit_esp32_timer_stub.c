@@ -17,11 +17,12 @@
 #include "esp_timer.h"
 #include "moonbit.h"
 
-esp_timer_handle_t __wrap_esp_timer_create(void *callback) {
+esp_timer_handle_t __wrap_esp_timer_create(void (*callback)(void *),
+                                           void *arg) {
   esp_timer_handle_t handle;
   esp_timer_create_args_t timer_args = {
       .callback = callback,
-      .arg = NULL,
+      .arg = arg,
   };
   esp_err_t err = esp_timer_create(&timer_args, &handle);
   // todo: check err
