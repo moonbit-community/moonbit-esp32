@@ -390,6 +390,22 @@ pub fn gpio_iomux_out(gpio_num : Byte, func : Int, out_en_inv : Bool) -> Unit {
 }
 
 ///|
+extern "C" fn _gpio_force_hold_all() -> Int = "gpio_force_hold_all"
+
+///|
+pub fn gpio_force_hold_all() -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_force_hold_all() })
+}
+
+///|
+extern "C" fn _gpio_force_unhold_all() -> Int = "gpio_force_unhold_all"
+
+///|
+pub fn gpio_force_unhold_all() -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_force_unhold_all() })
+}
+
+///|
 extern "C" fn _gpio_sleep_sel_en(gpio_num : Int) -> Int = "gpio_sleep_sel_en"
 
 ///|
@@ -429,6 +445,30 @@ pub fn gpio_sleep_set_pull_mode(
   @error.esp_err_wrapper!(fn() {
     _gpio_sleep_set_pull_mode(gpio_num, pull.to_int())
   })
+}
+
+///|
+extern "C" fn _gpio_deep_sleep_wakeup_enable(
+  gpio_num : Int,
+  intr_type : Int
+) -> Int = "gpio_deep_sleep_wakeup_enable"
+
+///|
+pub fn gpio_deep_sleep_wakeup_enable(
+  gpio_num : Int,
+  intr_type : GPIOIntrType
+) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() {
+    _gpio_deep_sleep_wakeup_enable(gpio_num, intr_type.to_int())
+  })
+}
+
+///|
+extern "C" fn _gpio_deep_sleep_wakeup_disable(gpio_num : Int) -> Int = "gpio_deep_sleep_wakeup_disable"
+
+///|
+pub fn gpio_deep_sleep_wakeup_disable(gpio_num : Int) -> Unit!@error.ESPError {
+  @error.esp_err_wrapper!(fn() { _gpio_deep_sleep_wakeup_disable(gpio_num) })
 }
 
 // TODO
