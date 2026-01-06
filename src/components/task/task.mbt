@@ -18,7 +18,7 @@ extern "C" fn _xTaskCreate(
   pxTaskCode : FuncRef[(@ctypes.Ptr[@ctypes.Void]) -> Unit],
   pcName : @ctypes.CString,
   usStackDepth : UInt,
-  uxPriority : UInt
+  uxPriority : UInt,
 ) -> Int = "__wrap_xTaskCreate"
 
 ///|
@@ -26,7 +26,7 @@ pub fn xTaskCreate(
   pxTaskCode : FuncRef[(@ctypes.Ptr[@ctypes.Void]) -> Unit],
   pcName : @ctypes.CString,
   usStackDepth : UInt,
-  uxPriority : UInt
+  uxPriority : UInt,
 ) -> Int {
   _xTaskCreate(pxTaskCode, pcName, usStackDepth, uxPriority)
 }

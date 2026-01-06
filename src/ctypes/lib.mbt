@@ -13,7 +13,9 @@
 // // limitations under the License.
 
 ///|
-pub extern type Ptr[_]
+#external
+pub type Ptr[_]
 
 ///|
-pub extern type Void
+#external
+pub type Void

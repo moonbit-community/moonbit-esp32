@@ -1,4 +1,7 @@
 target/
+target
+_build/
+_build
 .mooncakes/
 .DS_Store
 .vscode

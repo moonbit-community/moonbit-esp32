@@ -13,30 +13,31 @@
 // // limitations under the License.
 
 ///|
-pub extern type IntrHandle
+#external
+pub type IntrHandle
 
 ///|
 extern "C" fn _esp_intr_mark_shared(
   intno : Int,
   cpu : Int,
-  is_in_iram : Bool
+  is_in_iram : Bool,
 ) -> Int = "esp_intr_mark_shared"
 
 ///|
 pub fn esp_intr_mark_shared(
   intno : Int,
   cpu : Int,
-  is_in_iram : Bool
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_intr_mark_shared(intno, cpu, is_in_iram) })
+  is_in_iram : Bool,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_intr_mark_shared(intno, cpu, is_in_iram) })
 }
 
 ///|
 extern "C" fn _esp_intr_reserve(intno : Int, cpu : Int) -> Int = "esp_intr_reserve"
 
 ///|
-pub fn esp_intr_reserve(intno : Int, cpu : Int) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_intr_reserve(intno, cpu) })
+pub fn esp_intr_reserve(intno : Int, cpu : Int) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_intr_reserve(intno, cpu) })
 }
 
 ///|
@@ -45,17 +46,17 @@ extern "C" fn _esp_intr_alloc(
   flags : Int,
   callback : FuncRef[(() -> Unit) -> Unit],
   closure : () -> Unit,
-  ret_handle : Ref[IntrHandle?]
+  ret_handle : Ref[IntrHandle?],
 ) -> Int = "__wrap_esp_intr_alloc"
 
 ///|
 pub fn esp_intr_alloc(
   source : Int,
   flags : Int,
-  closure : () -> Unit
-) -> IntrHandle!@error.ESPError {
+  closure : () -> Unit,
+) -> IntrHandle raise @error.ESPError {
   let ret_handle : Ref[IntrHandle?] = @ref.new(None)
-  @error.esp_err_wrapper!(fn() {
+  @error.esp_err_wrapper(fn() {
     _esp_intr_alloc(source, flags, fn(f) { f() }, closure, ret_handle)
   })
   ret_handle.val.unwrap() // TODO: Handle error
@@ -68,8 +69,8 @@ pub fn esp_intr_alloc(
 extern "C" fn _esp_intr_free(handle : IntrHandle) -> Int = "esp_intr_free"
 
 ///|
-pub fn esp_intr_free(handle : IntrHandle) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_intr_free(handle) })
+pub fn esp_intr_free(handle : IntrHandle) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_intr_free(handle) })
 }
 
 ///|
@@ -92,30 +93,30 @@ pub fn esp_intr_get_intno(handle : IntrHandle) -> Int {
 extern "C" fn _esp_intr_disable(handle : IntrHandle) -> Int = "esp_intr_disable"
 
 ///|
-pub fn esp_intr_disable(handle : IntrHandle) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_intr_disable(handle) })
+pub fn esp_intr_disable(handle : IntrHandle) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_intr_disable(handle) })
 }
 
 ///|
 extern "C" fn _esp_intr_enable(handle : IntrHandle) -> Int = "esp_intr_enable"
 
 ///|
-pub fn esp_intr_enable(handle : IntrHandle) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_intr_enable(handle) })
+pub fn esp_intr_enable(handle : IntrHandle) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_intr_enable(handle) })
 }
 
 ///|
 extern "C" fn _esp_intr_set_in_iram(
   handle : IntrHandle,
-  is_in_iram : Bool
+  is_in_iram : Bool,
 ) -> Int = "esp_intr_set_in_iram"
 
 ///|
 pub fn esp_intr_set_in_iram(
   handle : IntrHandle,
-  is_in_iram : Bool
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_intr_set_in_iram(handle, is_in_iram) })
+  is_in_iram : Bool,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_intr_set_in_iram(handle, is_in_iram) })
 }
 
 ///|

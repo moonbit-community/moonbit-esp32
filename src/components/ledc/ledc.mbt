@@ -127,22 +127,22 @@ extern "C" fn _ledc_channel_config(
   duty~ : UInt,
   hpoint~ : Int,
   sleep_mode~ : Int,
-  flags~ : Int
+  flags~ : Int,
 ) -> Int = "__wrap_ledc_channel_config"
 
 ///|
 pub fn ledc_channel_config(
   gpio_num~ : Int,
-  speed_mod~ : LEDCMode = LEDCMode::LEDC_LOW_SPEED_MODE,
+  speed_mod? : LEDCMode = LEDCMode::LEDC_LOW_SPEED_MODE,
   channel~ : LEDCChannel,
   intr_type~ : LEDCIntrType,
-  timer_sel~ : LEDCTimer = LEDCTimer::LEDC_TIMER_0,
-  duty~ : UInt = 0,
-  hpoint~ : Int = 0,
-  sleep_mode~ : LEDCSleepMode = LEDCSleepMode::LEDC_SLEEP_MODE_NO_ALIVE_NO_PD,
-  flags~ : Int = 0
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  timer_sel? : LEDCTimer = LEDCTimer::LEDC_TIMER_0,
+  duty? : UInt = 0,
+  hpoint? : Int = 0,
+  sleep_mode? : LEDCSleepMode = LEDCSleepMode::LEDC_SLEEP_MODE_NO_ALIVE_NO_PD,
+  flags? : Int = 0,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_channel_config(
       gpio_num~,
       speed_mod=speed_mod.to_int(),
@@ -160,7 +160,7 @@ pub fn ledc_channel_config(
 ///|
 pub extern "C" fn ledc_find_suitable_duty_resolution(
   src_clk_freq : UInt,
-  timer_freq : UInt
+  timer_freq : UInt,
 ) -> UInt = "ledc_find_suitable_duty_resolution"
 
 ///|
@@ -170,7 +170,7 @@ extern "C" fn _ledc_timer_config(
   timer_num~ : Int,
   freq_hz~ : UInt,
   clk_cfg~ : Int,
-  deconfigure~ : Bool
+  deconfigure~ : Bool,
 ) -> Int = "__wrap_ledc_timer_config"
 
 ///|
@@ -179,10 +179,10 @@ pub fn ledc_timer_config(
   duty_resolution~ : LEDCTimerBit,
   timer_num~ : LEDCTimer,
   freq_hz~ : UInt,
-  clk_cfg~ : LEDCClkCfg = LEDCClkCfg::LEDC_AUTO_CLK,
-  deconfigure~ : Bool = false
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  clk_cfg? : LEDCClkCfg = LEDCClkCfg::LEDC_AUTO_CLK,
+  deconfigure? : Bool = false,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_timer_config(
       speed_mode=speed_mode.to_int(),
       duty_resolution=duty_resolution.to_int(),
@@ -200,9 +200,9 @@ extern "C" fn _ledc_update_duty(speed_mode : Int, channel : Int) -> Int = "ledc_
 ///|
 pub fn ledc_update_duty(
   speed_mode : LEDCMode,
-  channel : LEDCChannel
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  channel : LEDCChannel,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_update_duty(speed_mode.to_int(), channel.to_int())
   })
 }
@@ -211,16 +211,16 @@ pub fn ledc_update_duty(
 extern "C" fn _ledc_set_pin(
   gpio_num : Int,
   speed_mode : Int,
-  channel : Int
+  channel : Int,
 ) -> Int = "ledc_set_pin"
 
 ///|
 pub fn ledc_set_pin(
   gpio_num : Int,
   speed_mode : LEDCMode,
-  channel : LEDCChannel
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  channel : LEDCChannel,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_pin(gpio_num, speed_mode.to_int(), channel.to_int())
   })
 }
@@ -229,16 +229,16 @@ pub fn ledc_set_pin(
 extern "C" fn _ledc_stop(
   speed_mode : Int,
   channel : Int,
-  idle_level : UInt
+  idle_level : UInt,
 ) -> Int = "ledc_stop"
 
 ///|
 pub fn ledc_stop(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
-  idle_level : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  idle_level : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_stop(speed_mode.to_int(), channel.to_int(), idle_level)
   })
 }
@@ -247,16 +247,16 @@ pub fn ledc_stop(
 extern "C" fn _ledc_set_freq(
   speed_mode : Int,
   timer_num : Int,
-  freq_hz : UInt
+  freq_hz : UInt,
 ) -> Int = "ledc_set_freq"
 
 ///|
 pub fn ledc_set_freq(
   speed_mode : LEDCMode,
   timer_num : LEDCTimer,
-  freq_hz : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  freq_hz : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_freq(speed_mode.to_int(), timer_num.to_int(), freq_hz)
   })
 }
@@ -274,7 +274,7 @@ extern "C" fn _ledc_set_duty_with_hpoint(
   speed_mode : Int,
   channel : Int,
   duty : UInt,
-  hpoint : UInt
+  hpoint : UInt,
 ) -> Int = "ledc_set_duty_with_hpoint"
 
 ///|
@@ -282,9 +282,9 @@ pub fn ledc_set_duty_with_hpoint(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
   duty : UInt,
-  hpoint : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  hpoint : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_duty_with_hpoint(
       speed_mode.to_int(),
       channel.to_int(),
@@ -306,16 +306,16 @@ pub fn ledc_get_hpoint(speed_mode : LEDCMode, channel : LEDCChannel) -> Int {
 extern "C" fn _ledc_set_duty(
   speed_mode : Int,
   channel : Int,
-  duty : UInt
+  duty : UInt,
 ) -> Int = "ledc_set_duty"
 
 ///|
 pub fn ledc_set_duty(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
-  duty : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  duty : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_duty(speed_mode.to_int(), channel.to_int(), duty)
   })
 }
@@ -336,7 +336,7 @@ extern "C" fn _ledc_set_fade(
   fade_direction : Int,
   step_num : UInt,
   duty_cycle_num : UInt,
-  duty_scale : UInt
+  duty_scale : UInt,
 ) -> Int = "ledc_set_fade"
 
 ///|
@@ -347,9 +347,9 @@ pub fn ledc_set_fade(
   fade_direction : LEDCDutyDirection,
   step_num : UInt,
   duty_cycle_num : UInt,
-  duty_scale : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  duty_scale : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_fade(
       speed_mode.to_int(),
       channel.to_int(),
@@ -367,7 +367,7 @@ extern "C" fn _ledc_isr_register(
   callback : FuncRef[(() -> Unit) -> Unit],
   closure : () -> Unit,
   intr_alloc_flags : Int,
-  handle : @intr.IntrHandle
+  handle : @intr.IntrHandle,
 ) -> Int = "ledc_isr_register"
 
 ///|
@@ -375,9 +375,9 @@ pub fn ledc_isr_register(
   callback : FuncRef[(() -> Unit) -> Unit],
   closure : () -> Unit,
   intr_alloc_flags : Int,
-  handle : @intr.IntrHandle
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  handle : @intr.IntrHandle,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_isr_register(callback, closure, intr_alloc_flags, handle)
   })
 }
@@ -388,7 +388,7 @@ extern "C" fn _ledc_timer_set(
   timer_sel : Int,
   clock_divider : UInt,
   duty_resolution : UInt,
-  clk_src : Int
+  clk_src : Int,
 ) -> Int = "ledc_timer_set"
 
 ///|
@@ -397,9 +397,9 @@ pub fn ledc_timer_set(
   timer_sel : LEDCTimer,
   clock_divider : UInt,
   duty_resolution : UInt,
-  clk_src : LEDCClkCfg
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  clk_src : LEDCClkCfg,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_timer_set(
       speed_mode.to_int(),
       timer_sel.to_int(),
@@ -416,9 +416,9 @@ extern "C" fn _ledc_timer_rst(speed_mode : Int, timer_sel : Int) -> Int = "ledc_
 ///|
 pub fn ledc_timer_rst(
   speed_mode : LEDCMode,
-  timer_sel : LEDCTimer
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  timer_sel : LEDCTimer,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_timer_rst(speed_mode.to_int(), timer_sel.to_int())
   })
 }
@@ -429,9 +429,9 @@ extern "C" fn _ledc_timer_pause(speed_mode : Int, timer_sel : Int) -> Int = "led
 ///|
 pub fn ledc_timer_pause(
   speed_mode : LEDCMode,
-  timer_sel : LEDCTimer
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  timer_sel : LEDCTimer,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_timer_pause(speed_mode.to_int(), timer_sel.to_int())
   })
 }
@@ -442,9 +442,9 @@ extern "C" fn _ledc_timer_resume(speed_mode : Int, timer_sel : Int) -> Int = "le
 ///|
 pub fn ledc_timer_resume(
   speed_mode : LEDCMode,
-  timer_sel : LEDCTimer
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  timer_sel : LEDCTimer,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_timer_resume(speed_mode.to_int(), timer_sel.to_int())
   })
 }
@@ -453,16 +453,16 @@ pub fn ledc_timer_resume(
 extern "C" fn _ledc_bind_channel_timer(
   speed_mode : Int,
   channel : Int,
-  timer_sel : Int
+  timer_sel : Int,
 ) -> Int = "ledc_bind_channel_timer"
 
 ///|
 pub fn ledc_bind_channel_timer(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
-  timer_sel : LEDCTimer
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  timer_sel : LEDCTimer,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_bind_channel_timer(
       speed_mode.to_int(),
       channel.to_int(),
@@ -477,7 +477,7 @@ extern "C" fn _ledc_set_fade_with_step(
   channel : Int,
   target_duty : UInt,
   scale : UInt,
-  cycle_num : UInt
+  cycle_num : UInt,
 ) -> Int = "ledc_set_fade_with_step"
 
 ///|
@@ -486,9 +486,9 @@ pub fn ledc_set_fade_with_step(
   channel : LEDCChannel,
   target_duty : UInt,
   scale : UInt,
-  cycle_num : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  cycle_num : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_fade_with_step(
       speed_mode.to_int(),
       channel.to_int(),
@@ -504,7 +504,7 @@ extern "C" fn _ledc_set_fade_with_time(
   speed_mode : Int,
   channel : Int,
   target_duty : UInt,
-  max_fade_time_ms : Int
+  max_fade_time_ms : Int,
 ) -> Int = "ledc_set_fade_with_time"
 
 ///|
@@ -512,9 +512,9 @@ pub fn ledc_set_fade_with_time(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
   target_duty : UInt,
-  max_fade_time_ms : Int
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  max_fade_time_ms : Int,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_fade_with_time(
       speed_mode.to_int(),
       channel.to_int(),
@@ -528,8 +528,10 @@ pub fn ledc_set_fade_with_time(
 extern "C" fn _ledc_fade_func_install(intr_alloc_flags : Int) -> Int = "ledc_fade_func_install"
 
 ///|
-pub fn ledc_fade_func_install(intr_alloc_flags : Int) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _ledc_fade_func_install(intr_alloc_flags) })
+pub fn ledc_fade_func_install(
+  intr_alloc_flags : Int,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _ledc_fade_func_install(intr_alloc_flags) })
 }
 
 ///|
@@ -544,16 +546,16 @@ pub fn ledc_fade_func_uninstall() -> Unit {
 extern "C" fn _ledc_fade_start(
   speed_mode : Int,
   channel : Int,
-  fade_mode : Int
+  fade_mode : Int,
 ) -> Int = "ledc_fade_start"
 
 ///|
 pub fn ledc_fade_start(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
-  fade_mode : LEDCFadeMode
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  fade_mode : LEDCFadeMode,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_fade_start(speed_mode.to_int(), channel.to_int(), fade_mode.to_int())
   })
 }
@@ -564,9 +566,9 @@ extern "C" fn _ledc_fade_stop(speed_mode : Int, channel : Int) -> Int = "ledc_fa
 ///|
 pub fn ledc_fade_stop(
   speed_mode : LEDCMode,
-  channel : LEDCChannel
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  channel : LEDCChannel,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_fade_stop(speed_mode.to_int(), channel.to_int())
   })
 }
@@ -576,7 +578,7 @@ extern "C" fn _ledc_set_duty_and_update(
   speed_mode : Int,
   channel : Int,
   duty : UInt,
-  hpoint : UInt
+  hpoint : UInt,
 ) -> Int = "ledc_set_duty_and_update"
 
 ///|
@@ -584,9 +586,9 @@ pub fn ledc_set_duty_and_update(
   speed_mode : LEDCMode,
   channel : LEDCChannel,
   duty : UInt,
-  hpoint : UInt
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  hpoint : UInt,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_duty_and_update(
       speed_mode.to_int(),
       channel.to_int(),
@@ -602,7 +604,7 @@ extern "C" fn _ledc_set_fade_time_and_start(
   channel : Int,
   target_duty : UInt,
   max_fade_time_ms : UInt,
-  fade_mode : Int
+  fade_mode : Int,
 ) -> Int = "ledc_set_fade_time_and_start"
 
 ///|
@@ -611,9 +613,9 @@ pub fn ledc_set_fade_time_and_start(
   channel : LEDCChannel,
   target_duty : UInt,
   max_fade_time_ms : UInt,
-  fade_mode : LEDCFadeMode
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  fade_mode : LEDCFadeMode,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_fade_time_and_start(
       speed_mode.to_int(),
       channel.to_int(),
@@ -631,7 +633,7 @@ extern "C" fn _ledc_set_fade_step_and_start(
   target_duty : UInt,
   scale : UInt,
   cycle_num : UInt,
-  fade_mode : Int
+  fade_mode : Int,
 ) -> Int = "ledc_set_fade_step_and_start"
 
 ///|
@@ -641,9 +643,9 @@ pub fn ledc_set_fade_step_and_start(
   target_duty : UInt,
   scale : UInt,
   cycle_num : UInt,
-  fade_mode : LEDCFadeMode
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() {
+  fade_mode : LEDCFadeMode,
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() {
     _ledc_set_fade_step_and_start(
       speed_mode.to_int(),
       channel.to_int(),

@@ -51,14 +51,14 @@ extern "C" fn __spi_bus_initialize(
   quadhd_io_num : Int,
   max_transfer_sz : Int,
   flags : UInt,
-  dma_chan : Int
+  dma_chan : Int,
 ) -> Int = "__wrap_spi_bus_initialize"
 
 ///|
 pub fn spi_bus_initialize(
   host_id : SPI_HOST_DEVICE,
   bus_config : SPI_BUS_CONFIG,
-  dma_chan : SPI_COMMON_DMA
+  dma_chan : SPI_COMMON_DMA,
 ) -> Int {
   __spi_bus_initialize(
     host_id.to_int(),

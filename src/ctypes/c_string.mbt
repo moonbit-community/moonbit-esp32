@@ -13,7 +13,7 @@
 // // limitations under the License.
 
 ///|
-pub type CString Bytes
+pub struct CString(Bytes)
 
 ///|
 pub fn CString::from_bytes(data : Bytes) -> CString {
