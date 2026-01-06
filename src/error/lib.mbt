@@ -13,13 +13,13 @@
 // // limitations under the License.
 
 ///|
-pub type! ESPError {
+pub suberror ESPError {
   Fail
   Other(Int)
 } derive(Show)
 
 ///|
-pub fn esp_err_wrapper(f : () -> Int) -> Unit!ESPError {
+pub fn esp_err_wrapper(f : () -> Int) -> Unit raise ESPError {
   let code = f()
   match code {
     0 => ()

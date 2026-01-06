@@ -16,33 +16,34 @@
 extern "C" fn _esp_timer_early_init() -> Int = "esp_timer_early_init"
 
 ///|
-pub fn esp_timer_early_init() -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_early_init() })
+pub fn esp_timer_early_init() -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_early_init() })
 }
 
 ///|
 extern "C" fn _esp_timer_init() -> Int = "esp_timer_init"
 
 ///|
-pub fn esp_timer_init() -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_init() })
+pub fn esp_timer_init() -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_init() })
 }
 
 ///|
 extern "C" fn _esp_timer_deinit() -> Int = "esp_timer_deinit"
 
 ///|
-pub fn esp_timer_deinit() -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_deinit() })
+pub fn esp_timer_deinit() -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_deinit() })
 }
 
 ///|
-extern type ESPTimer
+#external
+type ESPTimer
 
 ///|
 extern "C" fn _esp_timer_create(
   callback : FuncRef[(() -> Unit) -> Unit],
-  closure : () -> Unit
+  closure : () -> Unit,
 ) -> ESPTimer = "__wrap_esp_timer_create"
 
 ///|
@@ -53,35 +54,35 @@ pub fn esp_timer_create(callback : () -> Unit) -> ESPTimer {
 ///|
 pub extern "C" fn esp_timer_start_once(
   timer : ESPTimer,
-  timeout_us : Int64
+  timeout_us : Int64,
 ) -> Int = "__wrap_esp_timer_start_once"
 
 ///|
 pub extern "C" fn esp_timer_start_periodic(
   timer : ESPTimer,
-  timeout_us : Int64
+  timeout_us : Int64,
 ) -> Int = "esp_timer_start_periodic"
 
 ///|
 pub extern "C" fn esp_timer_restart(
   timer : ESPTimer,
-  timeout_us : Int64
+  timeout_us : Int64,
 ) -> Int = "esp_timer_restart"
 
 ///|
 extern "C" fn _esp_timer_stop(timer : ESPTimer) -> Int = "esp_timer_stop"
 
 ///|
-pub fn esp_timer_stop(timer : ESPTimer) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_stop(timer) })
+pub fn esp_timer_stop(timer : ESPTimer) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_stop(timer) })
 }
 
 ///|
 extern "C" fn _esp_timer_delete(timer : ESPTimer) -> Int = "esp_timer_delete"
 
 ///|
-pub fn esp_timer_delete(timer : ESPTimer) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_delete(timer) })
+pub fn esp_timer_delete(timer : ESPTimer) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_delete(timer) })
 }
 
 ///|
@@ -96,29 +97,29 @@ pub extern "C" fn esp_timer_get_next_alarm_for_wake_up() -> Int64 = "esp_timer_g
 ///|
 extern "C" fn _esp_timer_get_period(
   timer : ESPTimer,
-  period : Ref[UInt64]
+  period : Ref[UInt64],
 ) -> Int = "__wrap_esp_timer_get_period"
 
 ///|
 pub fn esp_timer_get_period(
   timer : ESPTimer,
-  period : Ref[UInt64]
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_get_period(timer, period) })
+  period : Ref[UInt64],
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_get_period(timer, period) })
 }
 
 ///|
 extern "C" fn _esp_timer_get_expiry_time(
   timer : ESPTimer,
-  expiry : Ref[UInt64]
+  expiry : Ref[UInt64],
 ) -> Int = "__wrap_esp_timer_get_expiry_time"
 
 ///|
 pub fn esp_timer_get_expiry_time(
   timer : ESPTimer,
-  expiry : Ref[UInt64]
-) -> Unit!@error.ESPError {
-  @error.esp_err_wrapper!(fn() { _esp_timer_get_expiry_time(timer, expiry) })
+  expiry : Ref[UInt64],
+) -> Unit raise @error.ESPError {
+  @error.esp_err_wrapper(fn() { _esp_timer_get_expiry_time(timer, expiry) })
 }
 
 // TODO

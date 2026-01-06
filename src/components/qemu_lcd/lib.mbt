@@ -27,7 +27,7 @@ pub fn ESP_LCD_RGB_QEMU_BPP::to_uint(self : ESP_LCD_RGB_QEMU_BPP) -> UInt = "%id
 pub extern "C" fn esp_lcd_new_rgb_qemu(
   width : Int,
   height : Int,
-  bpp : ESP_LCD_RGB_QEMU_BPP
+  bpp : ESP_LCD_RGB_QEMU_BPP,
 ) -> @lcd.Panel = "__wrap_esp_lcd_new_rgb_qemu"
 
 ///|
