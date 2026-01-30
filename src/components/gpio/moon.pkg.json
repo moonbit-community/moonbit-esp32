@@ -1,19 +1,20 @@
 {
-    "import": [
-        "moonbitlang/esp32/error",
-        "moonbitlang/esp32/components/intr"
-    ],
-    "native-stub": [
-        "moonbit_esp32_gpio_stub.c"
-    ],
-    "supported-targets": [
-        "native"
-    ],
-    "link": {
-        "native": {
-            "cc": null,
-            "stub-cc": null,
-            "stub-cc-flags": null
-        }
+  "import": [
+    "moonbitlang/esp32/error",
+    "moonbitlang/esp32/components/intr",
+    "moonbitlang/core/ref"
+  ],
+  "native-stub": [
+    "moonbit_esp32_gpio_stub.c"
+  ],
+  "supported-targets": [
+    "native"
+  ],
+  "link": {
+    "native": {
+      "cc": null,
+      "stub-cc": null,
+      "stub-cc-flags": null
     }
+  }
 }
