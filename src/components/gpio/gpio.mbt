@@ -357,6 +357,7 @@ pub fn gpio_set_drive_capability(
 }
 
 ///|
+#owned(strength)
 extern "C" fn _gpio_get_drive_capability(
   gpio_num : Int,
   strength : Ref[Int],

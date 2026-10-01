@@ -95,6 +95,7 @@ pub extern "C" fn esp_timer_get_next_alarm() -> Int64 = "esp_timer_get_next_alar
 pub extern "C" fn esp_timer_get_next_alarm_for_wake_up() -> Int64 = "esp_timer_get_next_alarm_for_wake_up"
 
 ///|
+#owned(period)
 extern "C" fn _esp_timer_get_period(
   timer : ESPTimer,
   period : Ref[UInt64],
@@ -109,6 +110,7 @@ pub fn esp_timer_get_period(
 }
 
 ///|
+#owned(expiry)
 extern "C" fn _esp_timer_get_expiry_time(
   timer : ESPTimer,
   expiry : Ref[UInt64],

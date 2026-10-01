@@ -27,3 +27,7 @@ pub fn esp_err_wrapper(f : () -> Int) -> Unit raise ESPError {
     x => raise Other(x)
   }
 }
+
+///|
+#deprecated("implicit trait-method promotion is being removed; call via the trait")
+pub extend ESPError with Show::{to_string, output}
