@@ -63,4 +63,4 @@ jobs:
             moon version --all
         - name: moon check --target native
           run: |
-            moon check --target native
+            moon check --deny-warn --target native
