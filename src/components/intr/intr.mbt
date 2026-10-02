@@ -41,6 +41,7 @@ pub fn esp_intr_reserve(intno : Int, cpu : Int) -> Unit raise @error.ESPError {
 }
 
 ///|
+#owned(ret_handle)
 extern "C" fn _esp_intr_alloc(
   source : Int,
   flags : Int,

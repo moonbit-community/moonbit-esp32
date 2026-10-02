@@ -16,7 +16,20 @@
 pub suberror ESPError {
   Fail
   Other(Int)
-} derive(Show)
+}
+
+///|
+/// Same text as the former `derive(Show)`: `Fail`, `Other(<code>)`.
+pub impl Show for ESPError with fn output(self, logger) {
+  match self {
+    Fail => logger.write_string("Fail")
+    Other(code) => {
+      logger.write_string("Other(")
+      logger.write_object(code)
+      logger.write_string(")")
+    }
+  }
+}
 
 ///|
 pub fn esp_err_wrapper(f : () -> Int) -> Unit raise ESPError {
@@ -27,3 +40,7 @@ pub fn esp_err_wrapper(f : () -> Int) -> Unit raise ESPError {
     x => raise Other(x)
   }
 }
+
+///|
+#deprecated("implicit trait-method promotion is being removed; call via the trait")
+pub extend ESPError with Show::{to_string, output}
