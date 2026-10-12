@@ -15,12 +15,58 @@
 import platform
 import pathlib
 import json
+import re
 import subprocess
 import textwrap
 
 COMPONENTS = ["gpio", "task", "lcd", "spi", "qemu_lcd", "timer", "intr", "ledc"]
 
 CURRENT_MODULE_NAME = "moonbitlang/esp32"
+
+
+def read_module_name(module_dir: pathlib.Path) -> str:
+    """Read `name = "..."` from a `moon.mod` manifest."""
+    text = (module_dir / "moon.mod").read_text()
+    m = re.search(r'^name\s*=\s*("(?:[^"\\]|\\.)*")', text, re.MULTILINE)
+    if m is None:
+        raise ValueError(f"cannot find the module name in {module_dir / 'moon.mod'}")
+    return json.loads(m.group(1))
+
+
+def set_native_link_options(pkg_file: pathlib.Path, values: dict) -> None:
+    """Set `link.native.<key>` in a `moon.pkg` manifest for every key in
+    `values` that is missing or empty there. Existing non-empty values are
+    kept."""
+    text = pkg_file.read_text()
+    missing = {}
+    for key, value in values.items():
+        entry = re.search(r'"%s"\s*:\s*("(?:[^"\\]|\\.)*")' % re.escape(key), text)
+        if entry is None:
+            missing[key] = value
+        elif entry.group(1) == '""':
+            text = text[: entry.start(1)] + json.dumps(value, ensure_ascii=False) + text[entry.end(1) :]
+    if missing:
+        fields = ", ".join(
+            f"{json.dumps(k)}: {json.dumps(v, ensure_ascii=False)}" for k, v in missing.items()
+        )
+        native = re.search(r'"native"\s*:\s*\{', text)
+        link = re.search(r'(?:\blink|"link")\s*:\s*\{', text)
+        options = re.search(r"^options\(", text, re.MULTILINE)
+        if native is not None:
+            text = text[: native.end()] + f" {fields}," + text[native.end() :]
+        elif link is not None:
+            text = text[: link.end()] + f' "native": {{ {fields} }},' + text[link.end() :]
+        elif options is not None:
+            text = (
+                text[: options.end()]
+                + f'\n  link: {{ "native": {{ {fields} }} }},'
+                + text[options.end() :]
+            )
+        else:
+            if text and not text.endswith("\n"):
+                text += "\n"
+            text += f'\noptions(\n  link: {{ "native": {{ {fields} }} }},\n)\n'
+    pkg_file.write_text(text)
 
 
 def make_include_list(esp_idf_path, app_root_dir, target):
@@ -325,9 +371,7 @@ def create_moonbit_esp32_template_project(app_root_dir: pathlib.Path):
     if not main_dir.exists():
         main_dir.mkdir(parents=True)
 
-    with open(app_root_dir / "moon.mod.json") as fp:
-        j = json.load(fp)
-        user_module_name = j["name"]
+    user_module_name = read_module_name(app_root_dir)
 
     with open(app_root_dir / ".moonbit_esp32/CMakeLists.txt", "w") as fp:
         fp.write(
@@ -399,14 +443,10 @@ def create_moonbit_esp32_template_project(app_root_dir: pathlib.Path):
 
 def get_imported_components(app_root_dir: pathlib.Path) -> list[str]:
     used = set()
-    for pkg in app_root_dir.rglob("moon.pkg.json"):
+    for pkg in app_root_dir.rglob("moon.pkg"):
         if pkg.is_file():
-            with open(pkg, "r") as fp:
-                j = json.load(fp)
-                if "import" in j:
-                    for im in j["import"]:
-                        if im.startswith("moonbitlang/esp32/components"):
-                            used.add(im.replace("moonbitlang/esp32/components/", "", 1))
+            for im in re.findall(r'"moonbitlang/esp32/components/([^"]+)"', pkg.read_text()):
+                used.add(im)
     return list(used)
 
 
@@ -460,17 +500,14 @@ def find_esp_idf():
     module_root_dir = pathlib.Path(__file__).parent
     for component in COMPONENTS:
         component_dir = module_root_dir / "src" / "components" / component
-        with open(component_dir / "moon.pkg.json", "r") as fp:
-            pkg_json = json.load(fp)
-            if not pkg_json["link"]["native"]["cc"]:
-                pkg_json["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
-            if not pkg_json["link"]["native"]["stub-cc"]:
-                pkg_json["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
-            if not pkg_json["link"]["native"]["stub-cc-flags"]:
-                pkg_json["link"]["native"]["stub-cc-flags"] = cc_flags
-
-        with open(component_dir / "moon.pkg.json", "w") as fp:
-            json.dump(pkg_json, fp, indent=2)
+        set_native_link_options(
+            component_dir / "moon.pkg",
+            {
+                "cc": riscv32_esp_elf_gcc_path,
+                "stub-cc": riscv32_esp_elf_gcc_path,
+                "stub-cc-flags": cc_flags,
+            },
+        )
     if not (app_root_dir / "Makefile").exists():
         used = get_imported_components(app_root_dir)
         stubs = []
@@ -491,18 +528,14 @@ def find_esp_idf():
                 )
             )
 
-    with open(app_root_dir / "src/main/moon.pkg.json", "r") as fp:
-        j = json.load(fp)
-
-    with open(app_root_dir / "src/main/moon.pkg.json", "w") as fp:
-        j.setdefault("link", {}).setdefault("native", {})
-        if not j["link"]["native"].get("cc"):
-            j["link"]["native"]["cc"] = riscv32_esp_elf_gcc_path
-        if not j["link"]["native"].get("stub-cc"):
-            j["link"]["native"]["stub-cc"] = riscv32_esp_elf_gcc_path
-        if not j["link"]["native"].get("cc-flags"):
-            j["link"]["native"]["cc-flags"] = " ".join(USER_MAIN_CC_FLAGS)
-        json.dump(j, fp, indent=2)
+    set_native_link_options(
+        app_root_dir / "src/main/moon.pkg",
+        {
+            "cc": riscv32_esp_elf_gcc_path,
+            "stub-cc": riscv32_esp_elf_gcc_path,
+            "cc-flags": " ".join(USER_MAIN_CC_FLAGS),
+        },
+    )
 
     create_moonbit_esp32_template_project(app_root_dir)
 

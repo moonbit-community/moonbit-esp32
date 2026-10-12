@@ -13,7 +13,7 @@
 // // limitations under the License.
 
 ///|
-extern "C" fn _esp_timer_early_init() -> Int = "esp_timer_early_init"
+extern "C" fn _esp_timer_early_init() -> Int32 = "esp_timer_early_init"
 
 ///|
 pub fn esp_timer_early_init() -> Unit raise @error.ESPError {
@@ -21,7 +21,7 @@ pub fn esp_timer_early_init() -> Unit raise @error.ESPError {
 }
 
 ///|
-extern "C" fn _esp_timer_init() -> Int = "esp_timer_init"
+extern "C" fn _esp_timer_init() -> Int32 = "esp_timer_init"
 
 ///|
 pub fn esp_timer_init() -> Unit raise @error.ESPError {
@@ -29,7 +29,7 @@ pub fn esp_timer_init() -> Unit raise @error.ESPError {
 }
 
 ///|
-extern "C" fn _esp_timer_deinit() -> Int = "esp_timer_deinit"
+extern "C" fn _esp_timer_deinit() -> Int32 = "esp_timer_deinit"
 
 ///|
 pub fn esp_timer_deinit() -> Unit raise @error.ESPError {
@@ -55,22 +55,22 @@ pub fn esp_timer_create(callback : () -> Unit) -> ESPTimer {
 pub extern "C" fn esp_timer_start_once(
   timer : ESPTimer,
   timeout_us : Int64,
-) -> Int = "__wrap_esp_timer_start_once"
+) -> Int32 = "__wrap_esp_timer_start_once"
 
 ///|
 pub extern "C" fn esp_timer_start_periodic(
   timer : ESPTimer,
   timeout_us : Int64,
-) -> Int = "esp_timer_start_periodic"
+) -> Int32 = "esp_timer_start_periodic"
 
 ///|
 pub extern "C" fn esp_timer_restart(
   timer : ESPTimer,
   timeout_us : Int64,
-) -> Int = "esp_timer_restart"
+) -> Int32 = "esp_timer_restart"
 
 ///|
-extern "C" fn _esp_timer_stop(timer : ESPTimer) -> Int = "esp_timer_stop"
+extern "C" fn _esp_timer_stop(timer : ESPTimer) -> Int32 = "esp_timer_stop"
 
 ///|
 pub fn esp_timer_stop(timer : ESPTimer) -> Unit raise @error.ESPError {
@@ -78,7 +78,7 @@ pub fn esp_timer_stop(timer : ESPTimer) -> Unit raise @error.ESPError {
 }
 
 ///|
-extern "C" fn _esp_timer_delete(timer : ESPTimer) -> Int = "esp_timer_delete"
+extern "C" fn _esp_timer_delete(timer : ESPTimer) -> Int32 = "esp_timer_delete"
 
 ///|
 pub fn esp_timer_delete(timer : ESPTimer) -> Unit raise @error.ESPError {
@@ -99,7 +99,7 @@ pub extern "C" fn esp_timer_get_next_alarm_for_wake_up() -> Int64 = "esp_timer_g
 extern "C" fn _esp_timer_get_period(
   timer : ESPTimer,
   period : Ref[UInt64],
-) -> Int = "__wrap_esp_timer_get_period"
+) -> Int32 = "__wrap_esp_timer_get_period"
 
 ///|
 pub fn esp_timer_get_period(
@@ -114,7 +114,7 @@ pub fn esp_timer_get_period(
 extern "C" fn _esp_timer_get_expiry_time(
   timer : ESPTimer,
   expiry : Ref[UInt64],
-) -> Int = "__wrap_esp_timer_get_expiry_time"
+) -> Int32 = "__wrap_esp_timer_get_expiry_time"
 
 ///|
 pub fn esp_timer_get_expiry_time(
