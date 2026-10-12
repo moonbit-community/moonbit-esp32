@@ -15,7 +15,7 @@
 ///|
 pub suberror ESPError {
   Fail
-  Other(Int)
+  Other(Int32)
 }
 
 ///|
@@ -32,7 +32,7 @@ pub impl Show for ESPError with fn output(self, logger) {
 }
 
 ///|
-pub fn esp_err_wrapper(f : () -> Int) -> Unit raise ESPError {
+pub fn esp_err_wrapper(f : () -> Int32) -> Unit raise ESPError {
   let code = f()
   match code {
     0 => ()

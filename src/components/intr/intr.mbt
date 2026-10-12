@@ -18,45 +18,48 @@ pub type IntrHandle
 
 ///|
 extern "C" fn _esp_intr_mark_shared(
-  intno : Int,
-  cpu : Int,
+  intno : Int32,
+  cpu : Int32,
   is_in_iram : Bool,
-) -> Int = "esp_intr_mark_shared"
+) -> Int32 = "esp_intr_mark_shared"
 
 ///|
 pub fn esp_intr_mark_shared(
-  intno : Int,
-  cpu : Int,
+  intno : Int32,
+  cpu : Int32,
   is_in_iram : Bool,
 ) -> Unit raise @error.ESPError {
   @error.esp_err_wrapper(fn() { _esp_intr_mark_shared(intno, cpu, is_in_iram) })
 }
 
 ///|
-extern "C" fn _esp_intr_reserve(intno : Int, cpu : Int) -> Int = "esp_intr_reserve"
+extern "C" fn _esp_intr_reserve(intno : Int32, cpu : Int32) -> Int32 = "esp_intr_reserve"
 
 ///|
-pub fn esp_intr_reserve(intno : Int, cpu : Int) -> Unit raise @error.ESPError {
+pub fn esp_intr_reserve(
+  intno : Int32,
+  cpu : Int32,
+) -> Unit raise @error.ESPError {
   @error.esp_err_wrapper(fn() { _esp_intr_reserve(intno, cpu) })
 }
 
 ///|
 #owned(ret_handle)
 extern "C" fn _esp_intr_alloc(
-  source : Int,
-  flags : Int,
+  source : Int32,
+  flags : Int32,
   callback : FuncRef[(() -> Unit) -> Unit],
   closure : () -> Unit,
   ret_handle : Ref[IntrHandle?],
-) -> Int = "__wrap_esp_intr_alloc"
+) -> Int32 = "__wrap_esp_intr_alloc"
 
 ///|
 pub fn esp_intr_alloc(
-  source : Int,
-  flags : Int,
+  source : Int32,
+  flags : Int32,
   closure : () -> Unit,
 ) -> IntrHandle raise @error.ESPError {
-  let ret_handle : Ref[IntrHandle?] = @ref.new(None)
+  let ret_handle : Ref[IntrHandle?] = @ref.Ref(None)
   @error.esp_err_wrapper(fn() {
     _esp_intr_alloc(source, flags, fn(f) { f() }, closure, ret_handle)
   })
@@ -67,7 +70,7 @@ pub fn esp_intr_alloc(
 // esp_err_t esp_intr_alloc_intrstatus(int source, int flags, uint32_t intrstatusreg, uint32_t intrstatusmask, intr_handler_t handler, void *arg, intr_handle_t *ret_handle)
 
 ///|
-extern "C" fn _esp_intr_free(handle : IntrHandle) -> Int = "esp_intr_free"
+extern "C" fn _esp_intr_free(handle : IntrHandle) -> Int32 = "esp_intr_free"
 
 ///|
 pub fn esp_intr_free(handle : IntrHandle) -> Unit raise @error.ESPError {
@@ -75,23 +78,23 @@ pub fn esp_intr_free(handle : IntrHandle) -> Unit raise @error.ESPError {
 }
 
 ///|
-extern "C" fn _esp_intr_get_cpu(handle : IntrHandle) -> Int = "esp_intr_get_cpu"
+extern "C" fn _esp_intr_get_cpu(handle : IntrHandle) -> Int32 = "esp_intr_get_cpu"
 
 ///|
-pub fn esp_intr_get_cpu(handle : IntrHandle) -> Int {
+pub fn esp_intr_get_cpu(handle : IntrHandle) -> Int32 {
   _esp_intr_get_cpu(handle)
 }
 
 ///|
-extern "C" fn _esp_intr_get_intno(handle : IntrHandle) -> Int = "esp_intr_get_intno"
+extern "C" fn _esp_intr_get_intno(handle : IntrHandle) -> Int32 = "esp_intr_get_intno"
 
 ///|
-pub fn esp_intr_get_intno(handle : IntrHandle) -> Int {
+pub fn esp_intr_get_intno(handle : IntrHandle) -> Int32 {
   _esp_intr_get_intno(handle)
 }
 
 ///|
-extern "C" fn _esp_intr_disable(handle : IntrHandle) -> Int = "esp_intr_disable"
+extern "C" fn _esp_intr_disable(handle : IntrHandle) -> Int32 = "esp_intr_disable"
 
 ///|
 pub fn esp_intr_disable(handle : IntrHandle) -> Unit raise @error.ESPError {
@@ -99,7 +102,7 @@ pub fn esp_intr_disable(handle : IntrHandle) -> Unit raise @error.ESPError {
 }
 
 ///|
-extern "C" fn _esp_intr_enable(handle : IntrHandle) -> Int = "esp_intr_enable"
+extern "C" fn _esp_intr_enable(handle : IntrHandle) -> Int32 = "esp_intr_enable"
 
 ///|
 pub fn esp_intr_enable(handle : IntrHandle) -> Unit raise @error.ESPError {
@@ -110,7 +113,7 @@ pub fn esp_intr_enable(handle : IntrHandle) -> Unit raise @error.ESPError {
 extern "C" fn _esp_intr_set_in_iram(
   handle : IntrHandle,
   is_in_iram : Bool,
-) -> Int = "esp_intr_set_in_iram"
+) -> Int32 = "esp_intr_set_in_iram"
 
 ///|
 pub fn esp_intr_set_in_iram(
@@ -137,33 +140,33 @@ pub fn esp_intr_noniram_enable() -> Unit {
 }
 
 ///|
-extern "C" fn _esp_intr_enable_source(inum : Int) = "esp_intr_enable_source"
+extern "C" fn _esp_intr_enable_source(inum : Int32) = "esp_intr_enable_source"
 
 ///|
-pub fn esp_intr_enable_source(inum : Int) -> Unit {
+pub fn esp_intr_enable_source(inum : Int32) -> Unit {
   _esp_intr_enable_source(inum)
 }
 
 ///|
-extern "C" fn _esp_intr_disable_source(inum : Int) = "esp_intr_disable_source"
+extern "C" fn _esp_intr_disable_source(inum : Int32) = "esp_intr_disable_source"
 
 ///|
-pub fn esp_intr_disable_source(inum : Int) -> Unit {
+pub fn esp_intr_disable_source(inum : Int32) -> Unit {
   _esp_intr_disable_source(inum)
 }
 
 ///|
-extern "C" fn _esp_intr_flags_to_level(flags : Int) -> Int = "esp_intr_flags_to_level"
+extern "C" fn _esp_intr_flags_to_level(flags : Int32) -> Int32 = "esp_intr_flags_to_level"
 
 ///|
-pub fn esp_intr_flags_to_level(flags : Int) -> Int {
+pub fn esp_intr_flags_to_level(flags : Int32) -> Int32 {
   _esp_intr_flags_to_level(flags)
 }
 
 ///|
-extern "C" fn _esp_intr_level_to_flags(level : Int) -> Int = "esp_intr_level_to_flags"
+extern "C" fn _esp_intr_level_to_flags(level : Int32) -> Int32 = "esp_intr_level_to_flags"
 
 ///|
-pub fn esp_intr_level_to_flags(level : Int) -> Int {
+pub fn esp_intr_level_to_flags(level : Int32) -> Int32 {
   _esp_intr_level_to_flags(level)
 }

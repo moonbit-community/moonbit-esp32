@@ -17,7 +17,7 @@
 pub type Panel
 
 ///|
-extern "C" fn _esp_lcd_panel_reset(panel : Panel) -> Int = "__wrap_esp_lcd_panel_reset"
+extern "C" fn _esp_lcd_panel_reset(panel : Panel) -> Int32 = "__wrap_esp_lcd_panel_reset"
 
 ///|
 pub fn Panel::reset(self : Panel) -> Unit raise @error.ESPError {
@@ -25,7 +25,7 @@ pub fn Panel::reset(self : Panel) -> Unit raise @error.ESPError {
 }
 
 ///|
-extern "C" fn _esp_lcd_panel_init(panel : Panel) -> Int = "__wrap_esp_lcd_panel_init"
+extern "C" fn _esp_lcd_panel_init(panel : Panel) -> Int32 = "__wrap_esp_lcd_panel_init"
 
 ///|
 pub fn Panel::initialize(self : Panel) -> Unit raise @error.ESPError {
@@ -36,20 +36,20 @@ pub fn Panel::initialize(self : Panel) -> Unit raise @error.ESPError {
 #borrow(data)
 extern "C" fn _esp_lcd_panel_draw_bitmap(
   panel : Panel,
-  x_start : Int,
-  y_start : Int,
-  x_end : Int,
-  y_end : Int,
+  x_start : Int32,
+  y_start : Int32,
+  x_end : Int32,
+  y_end : Int32,
   data : FixedArray[Byte],
-) -> Int = "__wrap_esp_lcd_panel_draw_bitmap"
+) -> Int32 = "__wrap_esp_lcd_panel_draw_bitmap"
 
 ///|
 pub fn Panel::draw_bitmap(
   self : Panel,
-  x_start : Int,
-  y_start : Int,
-  x_end : Int,
-  y_end : Int,
+  x_start : Int32,
+  y_start : Int32,
+  x_end : Int32,
+  y_end : Int32,
   data : FixedArray[Byte],
 ) -> Unit {
   _esp_lcd_panel_draw_bitmap(self, x_start, y_start, x_end, y_end, data)
@@ -61,23 +61,26 @@ pub extern "C" fn esp_lcd_panel_mirror(
   panel : Panel,
   mirror_x : Bool,
   mirror_y : Bool,
-) -> Int = "__wrap_esp_lcd_panel_mirror"
+) -> Int32 = "__wrap_esp_lcd_panel_mirror"
 
 ///|
-pub extern "C" fn esp_lcd_panel_swap_xy(panel : Panel, swap_axes : Bool) -> Int = "__wrap_esp_lcd_panel_swap_xy"
+pub extern "C" fn esp_lcd_panel_swap_xy(
+  panel : Panel,
+  swap_axes : Bool,
+) -> Int32 = "__wrap_esp_lcd_panel_swap_xy"
 
 ///|
 pub extern "C" fn esp_lcd_panel_set_gap(
   panel : Panel,
-  x_gap : Int,
-  y_gap : Int,
-) -> Int = "__wrap_esp_lcd_panel_set_gap"
+  x_gap : Int32,
+  y_gap : Int32,
+) -> Int32 = "__wrap_esp_lcd_panel_set_gap"
 
 ///|
 extern "C" fn _esp_lcd_panel_invert_color(
   panel : Panel,
   invert_color_data : Bool,
-) -> Int = "__wrap_esp_lcd_panel_invert_color"
+) -> Int32 = "__wrap_esp_lcd_panel_invert_color"
 
 ///|
 pub fn Panel::invert_color(
@@ -90,7 +93,7 @@ pub fn Panel::invert_color(
 }
 
 ///|
-extern "C" fn _esp_lcd_panel_disp_on_off(panel : Panel, on_off : Bool) -> Int = "__wrap_esp_lcd_panel_disp_on_off"
+extern "C" fn _esp_lcd_panel_disp_on_off(panel : Panel, on_off : Bool) -> Int32 = "__wrap_esp_lcd_panel_disp_on_off"
 
 ///|
 pub fn Panel::on_off(self : Panel, on_off : Bool) -> Unit raise @error.ESPError {
@@ -98,7 +101,7 @@ pub fn Panel::on_off(self : Panel, on_off : Bool) -> Unit raise @error.ESPError 
 }
 
 ///|
-extern "C" fn _esp_lcd_panel_disp_sleep(panel : Panel, sleep : Bool) -> Int = "__wrap_esp_lcd_panel_disp_sleep"
+extern "C" fn _esp_lcd_panel_disp_sleep(panel : Panel, sleep : Bool) -> Int32 = "__wrap_esp_lcd_panel_disp_sleep"
 
 ///|
 pub fn Panel::sleep(self : Panel, sleep : Bool) -> Unit raise @error.ESPError {
@@ -109,9 +112,9 @@ pub fn Panel::sleep(self : Panel, sleep : Bool) -> Unit raise @error.ESPError {
 #borrow(io_handle)
 extern "C" fn _esp_lcd_new_panel_st7789(
   io_handle : Ref[ESP_LCD_PANEL_IO_HANDLE?],
-  reset_gpio_num : Int,
-  rgb_ele_order : Int,
-  bits_per_pixel : UInt,
+  reset_gpio_num : Int32,
+  rgb_ele_order : Int32,
+  bits_per_pixel : UInt32,
 ) -> Panel = "__wrap_esp_lcd_new_panel_st7789"
 
 ///|
@@ -121,14 +124,14 @@ pub(all) enum LCD_RGB_ELEMENT_ORDER {
 }
 
 ///|
-fn LCD_RGB_ELEMENT_ORDER::to_int(self : LCD_RGB_ELEMENT_ORDER) -> Int = "%identity"
+fn LCD_RGB_ELEMENT_ORDER::to_int(self : LCD_RGB_ELEMENT_ORDER) -> Int32 = "%identity"
 
 ///|
 pub fn esp_lcd_new_panel_st7789(
   io_handle~ : Ref[ESP_LCD_PANEL_IO_HANDLE?],
-  reset_gpio_num~ : Int,
+  reset_gpio_num~ : Int32,
   rgb_ele_order~ : LCD_RGB_ELEMENT_ORDER,
-  bits_per_pixel~ : UInt,
+  bits_per_pixel~ : UInt32,
 ) -> Panel {
   _esp_lcd_new_panel_st7789(
     io_handle,
@@ -140,13 +143,13 @@ pub fn esp_lcd_new_panel_st7789(
 
 ///|
 pub(all) struct ESP_LCD_PANEL_IO_SPI_CONFIG {
-  dc_gpio_num : Int
-  cs_gpio_num : Int
-  pclk_hz : UInt
-  lcd_cmd_bits : Int
-  lcd_param_bits : Int
-  spi_mode : Int
-  trans_queue_depth : Int
+  dc_gpio_num : Int32
+  cs_gpio_num : Int32
+  pclk_hz : UInt32
+  lcd_cmd_bits : Int32
+  lcd_param_bits : Int32
+  spi_mode : Int32
+  trans_queue_depth : Int32
 }
 
 ///|
@@ -156,23 +159,23 @@ type ESP_LCD_PANEL_IO_HANDLE
 ///|
 #borrow(io_handle)
 extern "C" fn __wrap_esp_lcd_new_panel_io_spi(
-  bus : Int,
-  dc_gpio_num : Int,
-  cs_gpio_num : Int,
-  pclk_hz : UInt,
-  lcd_cmd_bits : Int,
-  lcd_param_bits : Int,
-  spi_mode : Int,
-  trans_queue_depth : Int,
+  bus : Int32,
+  dc_gpio_num : Int32,
+  cs_gpio_num : Int32,
+  pclk_hz : UInt32,
+  lcd_cmd_bits : Int32,
+  lcd_param_bits : Int32,
+  spi_mode : Int32,
+  trans_queue_depth : Int32,
   io_handle : Ref[ESP_LCD_PANEL_IO_HANDLE?],
-) -> Int = "__wrap_esp_lcd_new_panel_io_spi"
+) -> Int32 = "__wrap_esp_lcd_new_panel_io_spi"
 
 ///|
 pub fn esp_lcd_new_panel_io_spi(
   bus : @spi.SPI_HOST_DEVICE,
   spi_config : ESP_LCD_PANEL_IO_SPI_CONFIG,
   io_handle : Ref[ESP_LCD_PANEL_IO_HANDLE?],
-) -> Int {
+) -> Int32 {
   __wrap_esp_lcd_new_panel_io_spi(
     bus.to_int(),
     spi_config.dc_gpio_num,

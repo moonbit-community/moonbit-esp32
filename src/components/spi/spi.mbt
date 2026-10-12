@@ -19,7 +19,7 @@ pub(all) enum SPI_HOST_DEVICE {
 }
 
 ///|
-pub fn SPI_HOST_DEVICE::to_int(self : SPI_HOST_DEVICE) -> Int = "%identity"
+pub fn SPI_HOST_DEVICE::to_int(self : SPI_HOST_DEVICE) -> Int32 = "%identity"
 
 ///|
 pub(all) enum SPI_COMMON_DMA {
@@ -28,38 +28,38 @@ pub(all) enum SPI_COMMON_DMA {
 }
 
 ///|
-pub fn SPI_COMMON_DMA::to_int(self : SPI_COMMON_DMA) -> Int = "%identity"
+pub fn SPI_COMMON_DMA::to_int(self : SPI_COMMON_DMA) -> Int32 = "%identity"
 
 ///|
 pub(all) struct SPI_BUS_CONFIG {
-  sclk_io_num : Int
-  mosi_io_num : Int
-  miso_io_num : Int
-  quadwp_io_num : Int
-  quadhd_io_num : Int
-  max_transfer_sz : Int
-  flags : UInt
+  sclk_io_num : Int32
+  mosi_io_num : Int32
+  miso_io_num : Int32
+  quadwp_io_num : Int32
+  quadhd_io_num : Int32
+  max_transfer_sz : Int32
+  flags : UInt32
 }
 
 ///|
 extern "C" fn __spi_bus_initialize(
-  host_id : Int,
-  sclk_io_num : Int,
-  mosi_io_num : Int,
-  miso_io_num : Int,
-  quadwp_io_num : Int,
-  quadhd_io_num : Int,
-  max_transfer_sz : Int,
-  flags : UInt,
-  dma_chan : Int,
-) -> Int = "__wrap_spi_bus_initialize"
+  host_id : Int32,
+  sclk_io_num : Int32,
+  mosi_io_num : Int32,
+  miso_io_num : Int32,
+  quadwp_io_num : Int32,
+  quadhd_io_num : Int32,
+  max_transfer_sz : Int32,
+  flags : UInt32,
+  dma_chan : Int32,
+) -> Int32 = "__wrap_spi_bus_initialize"
 
 ///|
 pub fn spi_bus_initialize(
   host_id : SPI_HOST_DEVICE,
   bus_config : SPI_BUS_CONFIG,
   dma_chan : SPI_COMMON_DMA,
-) -> Int {
+) -> Int32 {
   __spi_bus_initialize(
     host_id.to_int(),
     bus_config.sclk_io_num,

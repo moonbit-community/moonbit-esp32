@@ -29,13 +29,13 @@ Before you begin, make sure you have installed ESP IDF version v5.4.1. You can f
    This command will automatically generate a template project `.moonbit_esp32`, configure the ESP IDF toolchain path, and generate a `Makefile`.
 
 - Use the MoonBit ESP32 Binding to blink an LED:
-    First, import the relevant packages in `src/main/moon.pkg.json`:
-    ```json
-    "import": [
-        "moonbitlang/esp32/ctypes",
-        "moonbitlang/esp32/components/gpio",
-        "moonbitlang/esp32/components/task"
-    ],
+    First, import the relevant packages in `src/main/moon.pkg`:
+    ```
+    import {
+      "moonbitlang/esp32/ctypes",
+      "moonbitlang/esp32/components/gpio",
+      "moonbitlang/esp32/components/task",
+    }
     ```
     Then write the following code in `src/main/main.mbt`:
     ```moonbit

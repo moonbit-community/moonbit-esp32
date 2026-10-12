@@ -19,16 +19,16 @@ pub(all) enum ESP_LCD_RGB_QEMU_BPP {
 }
 
 ///|
-pub fn ESP_LCD_RGB_QEMU_BPP::to_uint(self : ESP_LCD_RGB_QEMU_BPP) -> UInt = "%identity"
+pub fn ESP_LCD_RGB_QEMU_BPP::to_uint(self : ESP_LCD_RGB_QEMU_BPP) -> UInt32 = "%identity"
 
 // qemu rgb lcd
 
 ///|
 pub extern "C" fn esp_lcd_new_rgb_qemu(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   bpp : ESP_LCD_RGB_QEMU_BPP,
 ) -> @lcd.Panel = "__wrap_esp_lcd_new_rgb_qemu"
 
 ///|
-pub extern "C" fn esp_lcd_rgb_qemu_refresh(panel : @lcd.Panel) -> Int = "__wrap_esp_lcd_rgb_qemu_refresh"
+pub extern "C" fn esp_lcd_rgb_qemu_refresh(panel : @lcd.Panel) -> Int32 = "__wrap_esp_lcd_rgb_qemu_refresh"
